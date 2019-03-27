@@ -1,0 +1,4 @@
+env/*
+.eggs/*
+.vscode/*
+DESIGN.txt
