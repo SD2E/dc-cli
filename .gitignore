@@ -2,3 +2,5 @@ env/*
 .eggs/*
 .vscode/*
 DESIGN.txt
+build/*
+dc_cli.egg-info/*
