@@ -1,5 +1,6 @@
 CHANGES
 =======
 
+* Implemented get\_admin\_token
 * First init
 * Initial commit

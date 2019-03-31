@@ -6,6 +6,8 @@ from cliff.app import App
 from cliff.commandmanager import CommandManager
 from pbr.version import VersionInfo
 
+from . import utils
+
 version_info = VersionInfo('dc_cli')
 
 
@@ -25,41 +27,61 @@ class CatalogApp(App):
         parser = super(CatalogApp, self).build_option_parser(
             description, version)
 
-        # override base_url
-        # parser.add_argument(
-        #     '--atmo-base-url',
-        #     metavar='<atmosphere-base-url>',
-        #     dest='base_url',
-        #     default=utils.env('ATMO_BASE_URL'),
-        #     help='Base URL for the Atmosphere API (Env: ATMO_BASE_URL)'
-        # )
+        parser.add_argument(
+            '--mongo-host',
+            metavar='<mongo-host>',
+            dest='mongo_host',
+            default=utils.env('MONGODB_HOST'),
+            help='MongoDB host (Env: MONGODB_HOST)'
+        )
 
-        # # atmosphere api auth token
-        # parser.add_argument(
-        #     '--atmo-auth-token',
-        #     metavar='<atmosphere-auth-token>',
-        #     dest='auth_token',
-        #     default=utils.env('ATMO_AUTH_TOKEN'),
-        #     help='Token used to authenticate with the Atmosphere API (Env: ATMO_AUTH_TOKEN)'
-        # )
+        parser.add_argument(
+            '--mongo-port',
+            metavar='<mongo-port>',
+            dest='mongo_port',
+            default=int(utils.env('MONGODB_PORT')),
+            help='MongoDB port (Env: MONGODB_PORT)'
+        )
 
-        # # atmosphere api server timeout
-        # parser.add_argument(
-        #     '--atmo-api-server-timeout',
-        #     metavar='<atmosphere-api-server-timeout>',
-        #     dest='api_server_timeout',
-        #     default=utils.env('ATMO_API_SERVER_TIMEOUT', cast=int),
-        #     help='Server timeout (in seconds) when accessing Atmosphere API (Env: ATMO_API_SERVER_TIMEOUT)'
-        # )
+        parser.add_argument(
+            '--mongo-username',
+            metavar='<mongo-username>',
+            dest='mongo_username',
+            default=utils.env('MONGODB_USERNAME'),
+            help='MongoDB port (Env: MONGODB_USERNAME)'
+        )
 
-        # # hidden option that controls whether to verify API server's TLS certificate
-        # parser.add_argument(
-        #     '--no-verify-cert',
-        #     action='store_false',
-        #     dest='verify_cert',
-        #     default=utils.env('ATMO_API_SERVER_VERIFY_CERT', cast=bool),
-        #     help=argparse.SUPPRESS
-        # )
+        parser.add_argument(
+            '--mongo-pass',
+            metavar='<mongo-pass>',
+            dest='mongo_password',
+            default=utils.env('MONGODB_PASSWORD'),
+            help='MongoDB port (Env: MONGODB_PASSWORD)'
+        )
+
+        parser.add_argument(
+            '--mongo-database',
+            metavar='<mongo-database>',
+            dest='mongo_database',
+            default=utils.env('MONGODB_DATABASE'),
+            help='MongoDB port (Env: MONGODB_DATABASE)'
+        )
+        # provide Oauth2 token via CLI
+        parser.add_argument(
+            '--tacc-acess-token',
+            metavar='<tacc-access-token>',
+            dest='tacc_access_token',
+            default=utils.env('ACCESS_TOKEN'),
+            help='TACC API access token (Env: ACCESS_TOKEN)'
+        )
+
+        parser.add_argument(
+            '--tacc-api-server',
+            metavar='<tacc-api-server>',
+            dest='tacc_api_server',
+            default=utils.env('API_SERVER'),
+            help='TACC API server URL (Env: API_SERVER)'
+        )
 
         return parser
 

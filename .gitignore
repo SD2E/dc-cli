@@ -4,3 +4,4 @@ env/*
 DESIGN.txt
 build/*
 dc_cli.egg-info/*
+*__pycache__*

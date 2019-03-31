@@ -1,6 +1,7 @@
 import logging
 from cliff.show import ShowOne
 from datacatalog.tokens import get_admin_token, get_admin_lifetime
+from . import utils
 
 
 class TokenShow(ShowOne):
@@ -12,7 +13,13 @@ class TokenShow(ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(TokenShow, self).get_parser(prog_name)
-        parser.add_argument('key', help='the admin token key')
+        parser.add_argument(
+            '--key',
+            metavar='<admin-key>',
+            dest='key',
+            default=utils.env('ADMIN_TOKEN_KEY'),
+            help='Admin token key (Env: ADMIN_TOKEN_KEY)'
+        )
         return parser
 
     def take_action(self, parsed_args):
