@@ -40,17 +40,23 @@ class DatabaseAPI(object):
         self.displayfields = fields
         self.db = Manager(mongodb)
 
-    def get_fieldnames(self, name, filter=[]):
+    def get_fieldnames(self, name, filter=[], humanize=False):
 
+        fieldnames = None
         if self.verbosity == Verbosity.ALL:
-            return self.db.stores[name].get_fields()
+            fieldnames = self.db.stores[name].get_fields()
         elif self.verbosity == Verbosity.INDEXED:
             if self.displayfields is not None:
-                return self.displayfields
+                fieldnames = self.displayfields
             else:
-                return self.db.stores[name].get_indexes()
+                fieldnames = self.db.stores[name].get_indexes()
         else:
-            return self.db.stores[name].get_identifiers()
+            fieldnames = self.db.stores[name].get_identifiers()
+
+        if humanize:
+            fieldnames = [f.title() for f in fieldnames]
+
+        return fieldnames
 
     def query_collection(self, name, filter={}, limit=None, skip=None):
         fields = self.get_fieldnames(name)

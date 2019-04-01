@@ -1,11 +1,11 @@
 import logging
 
-from cliff.lister import Lister
 from dc_cli.api import DatabaseAPI, Verbosity
+from .extended import ExtLister
 from . import utils
 
 
-class CollectionList(Lister):
+class CollectionList(ExtLister):
     collection = None
     displayfields = None
     pagesize = int(utils.env('CATALOG_PAGESIZE'))
@@ -32,19 +32,19 @@ class CollectionList(Lister):
             help="Return page [p] of {} records".format(self.pagesize)
         )
 
-        parser.add_argument(
-            '-x, --extended',
-            action='store_true',
-            dest='return_all',
-            help="Return all fields"
-        )
+        # parser.add_argument(
+        #     '-x, --extended',
+        #     action='store_true',
+        #     dest='return_all',
+        #     help="Return all fields"
+        # )
 
-        parser.add_argument(
-            '-i, --ids',
-            action='store_true',
-            dest='return_identifiers',
-            help="Return identifiers only"
-        )
+        # parser.add_argument(
+        #     '-i, --ids',
+        #     action='store_true',
+        #     dest='return_identifiers',
+        #     help="Return identifiers only"
+        # )
 
         return parser
 
@@ -75,7 +75,7 @@ class CollectionList(Lister):
             skip = parsed_args.skip
 
         headers = api.get_fieldnames(
-            self.collection)
+            self.collection, humanize=parsed_args.humanize)
         data = api.query_collection(
             self.collection, limit=limit, skip=skip)
         collection_members = []

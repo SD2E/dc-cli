@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Rework subclasses to share a common configuration baseclass that holds collection name, display fields, etc
 * Implement listers for all collections. Added skip/limit/page support. Implemented three levels of verbosity for responses: identifiers, default, and and all
 * Working list method for CP, EXD, EXP
 * Implemented get\_admin\_token
