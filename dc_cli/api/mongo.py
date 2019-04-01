@@ -14,6 +14,10 @@ class Verbosity:
     DEFAULT = INDEXED
 
 
+FILTERED_FIELDS = ['experiment_designs', 'experiments',
+                   'samples', 'measurements', 'files', 'jobs']
+
+
 class DatabaseAPI(object):
     """Main class for accessing a Data Catalog via MongoDB connection
 
@@ -52,6 +56,12 @@ class DatabaseAPI(object):
                 fieldnames = self.db.stores[name].get_indexes()
         else:
             fieldnames = self.db.stores[name].get_identifiers()
+
+        for f in FILTERED_FIELDS:
+            try:
+                fieldnames.remove(f)
+            except ValueError:
+                pass
 
         if humanize:
             fieldnames = [f.title() for f in fieldnames]
