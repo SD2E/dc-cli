@@ -2,7 +2,13 @@ import logging
 from .collections import CollectionList
 
 
-class JobList(CollectionList):
+class Job:
     collection = 'pipelinejob'
-    log = logging.getLogger(__name__)
     displayfields = ['uuid', 'state', 'updated']
+
+
+class JobList(Job, CollectionList):
+    """
+    List pipeline jobs
+    """
+    log = logging.getLogger(__name__)

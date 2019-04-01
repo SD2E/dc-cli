@@ -2,7 +2,13 @@ import logging
 from .collections import CollectionList
 
 
-class SampleList(CollectionList):
+class Sample:
     collection = 'sample'
-    log = logging.getLogger(__name__)
     displayfields = ['uuid', 'lab_sample_id']
+
+
+class SampleList(Sample, CollectionList):
+    """
+    List samples
+    """
+    log = logging.getLogger(__name__)

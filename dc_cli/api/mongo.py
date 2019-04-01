@@ -67,6 +67,12 @@ class DatabaseAPI(object):
             for r in resp:
                 yield DataCatalogRecord(r).as_list()
 
+    def get_by_identifier(self):
+        fields = self.get_fieldnames(name)
+        proj = ordered_projection(fields)
+        extras = dict()
+        pass
+
 
 def ordered_projection(fields):
     """Creates a MongoDB projection from an ordered list of fields"""

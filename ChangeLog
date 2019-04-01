@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Implement listers for all collections. Added skip/limit/page support. Implemented three levels of verbosity for responses: identifiers, default, and and all
 * Working list method for CP, EXD, EXP
 * Implemented get\_admin\_token
 * First init

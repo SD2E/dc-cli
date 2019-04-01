@@ -1,36 +1,19 @@
 import logging
-
-from cliff.lister import Lister
+from cliff.show import ShowOne
 from dc_cli.api import DatabaseAPI, Verbosity
 from . import utils
 
 
-class CollectionList(Lister):
+class Member(ShowOne):
     collection = None
     displayfields = None
-    pagesize = int(utils.env('CATALOG_PAGESIZE'))
+    pagesize = 1
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(CollectionList, self).get_parser(prog_name)
+        parser = super(Member, self).get_parser(prog_name)
 
-        parser.add_argument(
-            '-l, --limit',
-            dest='limit',
-            help="Return first [l] records"
-        )
-
-        parser.add_argument(
-            '-k, --skip',
-            dest='skip',
-            help="Skip first [k] records"
-        )
-
-        parser.add_argument(
-            '-p, --page',
-            dest='page',
-            help="Return page [p] of {} records".format(self.pagesize)
-        )
+        parser.add_argument('identifier', help='A valid identifier')
 
         parser.add_argument(
             '-x, --extended',
@@ -45,6 +28,13 @@ class CollectionList(Lister):
             dest='return_identifiers',
             help="Return identifiers only"
         )
+
+        # parser.add_argument(
+        #     '-t, --type',
+        #     action='store_true',
+        #     dest='return_type',
+        #     help="Return identifier type only"
+        # )
 
         return parser
 
@@ -66,18 +56,10 @@ class CollectionList(Lister):
                           verbose=verbosity
                           )
 
-        # Pagination
-        if parsed_args.page is not None:
-            limit = self.pagesize
-            skip = parsed_args.page * limit
-        else:
-            limit = parsed_args.limit
-            skip = parsed_args.skip
-
         headers = api.get_fieldnames(
             self.collection)
         data = api.query_collection(
-            self.collection, limit=limit, skip=skip)
+            self.collection, limit=1, skip=0)
         collection_members = []
         for record in data:
             collection_members.append(record)

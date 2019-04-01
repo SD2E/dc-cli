@@ -6,7 +6,7 @@ from . import utils
 
 class TokenShow(ShowOne):
     """
-    Fetch the current administrative token
+    Get an administrative token
     """
 
     log = logging.getLogger(__name__)
