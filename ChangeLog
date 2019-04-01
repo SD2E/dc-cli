@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Working list method for CP, EXD, EXP
 * Implemented get\_admin\_token
 * First init
 * Initial commit

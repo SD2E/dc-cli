@@ -7,6 +7,13 @@ from datacatalog.managers import Manager
 from .record import DataCatalogRecord
 
 
+class Verbosity:
+    IDENTIFIERS = 0
+    INDEXED = 1
+    ALL = 2
+    DEFAULT = INDEXED
+
+
 class DatabaseAPI(object):
     """Main class for accessing a Data Catalog via MongoDB connection
 
@@ -21,27 +28,40 @@ class DatabaseAPI(object):
                  mongo_password=MONGODB_PASSWORD,
                  api_server=API_SERVER,
                  api_token=API_TOKEN,
-                 verbose=False):
+                 fields=None,
+                 verbose=Verbosity.INDEXED):
 
         mongodb = {'host': mongo_host, 'port': mongo_port,
                    'database': mongo_database, 'username': mongo_username,
                    'password': mongo_password}
 
         self.log = logging.getLogger(__name__)
-        self.verbose = verbose
+        self.verbosity = verbose
+        self.displayfields = fields
         self.db = Manager(mongodb)
 
     def get_fieldnames(self, name, filter=[]):
 
-        if self.verbose:
+        if self.verbosity == Verbosity.ALL:
             return self.db.stores[name].get_fields()
+        elif self.verbosity == Verbosity.INDEXED:
+            if self.displayfields is not None:
+                return self.displayfields
+            else:
+                return self.db.stores[name].get_indexes()
         else:
             return self.db.stores[name].get_identifiers()
 
-    def query_collection(self, name, filter={}, page=0):
+    def query_collection(self, name, filter={}, limit=None, skip=None):
         fields = self.get_fieldnames(name)
         proj = ordered_projection(fields)
-        resp = self.db.stores[name].query(filter, projection=proj)
+        extras = dict()
+        if limit is not None:
+            extras['limit'] = int(limit)
+        if skip is not None:
+            extras['skip'] = int(skip)
+        resp = self.db.stores[name].query(
+            filter, projection=proj, **extras)
         if resp is not None:
             DataCatalogRecord.set_fields(fields)
             for r in resp:
