@@ -8,7 +8,7 @@ from . import utils
 class CollectionList(ExtLister):
     collection = None
     displayfields = None
-    pagesize = int(utils.env('CATALOG_PAGESIZE'))
+    pagesize = utils.env('PAGESIZE', cast=int)
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
@@ -17,34 +17,23 @@ class CollectionList(ExtLister):
         parser.add_argument(
             '-l, --limit',
             dest='limit',
+            type=int,
             help="Return first [l] records"
         )
 
         parser.add_argument(
             '-k, --skip',
             dest='skip',
+            type=int,
             help="Skip first [k] records"
         )
 
         parser.add_argument(
             '-p, --page',
             dest='page',
+            type=int,
             help="Return page [p] of {} records".format(self.pagesize)
         )
-
-        # parser.add_argument(
-        #     '-x, --extended',
-        #     action='store_true',
-        #     dest='return_all',
-        #     help="Return all fields"
-        # )
-
-        # parser.add_argument(
-        #     '-i, --ids',
-        #     action='store_true',
-        #     dest='return_identifiers',
-        #     help="Return identifiers only"
-        # )
 
         return parser
 

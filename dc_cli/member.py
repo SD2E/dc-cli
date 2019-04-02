@@ -4,14 +4,14 @@ from dc_cli.api import DatabaseAPI, Verbosity
 from . import utils
 
 
-class Member(ShowOne):
+class MemberShow(ShowOne):
     collection = None
     displayfields = None
     pagesize = 1
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(Member, self).get_parser(prog_name)
+        parser = super(MemberShow, self).get_parser(prog_name)
 
         parser.add_argument('identifier', help='A valid identifier')
 
@@ -58,10 +58,5 @@ class Member(ShowOne):
 
         headers = api.get_fieldnames(
             self.collection)
-        data = api.query_collection(
-            self.collection, limit=1, skip=0)
-        collection_members = []
-        for record in data:
-            collection_members.append(record)
-
-        return (headers, tuple(collection_members))
+        data = api.get_by_identifier(parsed_args.id)
+        return (headers, data)

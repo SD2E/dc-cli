@@ -9,8 +9,8 @@ class ExtShowOne(ShowOne):
     def get_parser(self, prog_name):
         parser = super(ExtShowOne, self).get_parser(prog_name)
         parser.add_argument(
-            '--machine_fieldnames',
-            action='store_false',
+            '--human-ids',
+            action='store_true',
             dest='humanize',
             help=argparse.SUPPRESS
         )

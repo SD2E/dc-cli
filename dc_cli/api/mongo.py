@@ -4,6 +4,8 @@ from .constants import (MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE,
                         MONGODB_USERNAME, MONGODB_PASSWORD,
                         API_SERVER, API_TOKEN, PAGESIZE)
 from datacatalog.managers import Manager
+from datacatalog.identifiers import typeduuid
+
 from .record import DataCatalogRecord
 
 
@@ -25,6 +27,8 @@ class DatabaseAPI(object):
         verbose (bool): Whether to return complete or summary responses
     """
 
+    log = logging.getLogger(__name__)
+
     def __init__(self, mongo_host=MONGODB_HOST,
                  mongo_port=MONGODB_PORT,
                  mongo_database=MONGODB_DATABASE,
@@ -39,7 +43,6 @@ class DatabaseAPI(object):
                    'database': mongo_database, 'username': mongo_username,
                    'password': mongo_password}
 
-        self.log = logging.getLogger(__name__)
         self.verbosity = verbose
         self.displayfields = fields
         self.db = Manager(mongodb)
@@ -56,6 +59,7 @@ class DatabaseAPI(object):
                 fieldnames = self.db.stores[name].get_indexes()
         else:
             fieldnames = self.db.stores[name].get_identifiers()
+        self.log.debug('Field Names: {}'.format(fieldnames))
 
         for f in FILTERED_FIELDS:
             try:
@@ -83,11 +87,17 @@ class DatabaseAPI(object):
             for r in resp:
                 yield DataCatalogRecord(r).as_list()
 
-    def get_by_identifier(self):
-        fields = self.get_fieldnames(name)
-        proj = ordered_projection(fields)
-        extras = dict()
-        pass
+    def get_by_identifier(self, identifier):
+        resp = self.db.get_by_identifier(identifier, permissive=False)
+        self.log.debug('Response: {}'.format(resp))
+        if resp is not None:
+            resp_type = typeduuid.get_uuidtype(resp['uuid'])
+            filt_fields = self.get_fieldnames(resp_type, humanize=False)
+            DataCatalogRecord.set_fields(filt_fields)
+            return DataCatalogRecord(resp).as_list()
+
+    def get_uuid_type(self, uuid):
+        return typeduuid.get_uuidtype(uuid)
 
 
 def ordered_projection(fields):

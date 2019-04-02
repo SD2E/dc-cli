@@ -1,6 +1,6 @@
-import sys
 import argparse
 import logging
+import sys
 
 from cliff.app import App
 from cliff.commandmanager import CommandManager
@@ -14,6 +14,8 @@ version_info = VersionInfo('dc_cli')
 class CatalogApp(App):
 
     logger = logging.getLogger(__name__)
+    if utils.env('LOGLEVEL') is not None:
+        logging.basicConfig(level=utils.env('LOGLEVEL'))
 
     def __init__(self):
         super(CatalogApp, self).__init__(
