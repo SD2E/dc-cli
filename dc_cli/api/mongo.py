@@ -99,6 +99,19 @@ class DatabaseAPI(object):
             DataCatalogRecord.set_fields(filt_fields)
             return DataCatalogRecord(resp).as_list()
 
+    def get_collection_member_by_identifier(self, identifier, collection=None):
+        self.log.debug('Ident, Coll: {}, {}'.format(identifier, collection))
+        if collection is None:
+            return self.get_by_identifier(identifier)
+        resp = self.db.stores[collection].find_one_by_identifier(identifier)
+        self.log.debug('Response: {}'.format(resp))
+        if resp is not None:
+            resp_type = typeduuid.get_uuidtype(resp['uuid'])
+            filt_fields = self.get_fieldnames(resp_type, humanize=False)
+            DataCatalogRecord.set_flatten(self.flatten)
+            DataCatalogRecord.set_fields(filt_fields)
+            return DataCatalogRecord(resp).as_list()
+
     def get_uuid_type(self, uuid):
         return typeduuid.get_uuidtype(uuid)
 

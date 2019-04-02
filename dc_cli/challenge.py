@@ -1,6 +1,5 @@
 import logging
-from .collections import CollectionList
-from .member import MemberShow
+from .collections import CollectionList, CollectionMember
 
 
 class Challenge:
@@ -15,8 +14,8 @@ class ChallengeList(Challenge, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class ChallengeShow(Challenge, MemberShow):
+class ChallengeGet(Challenge, CollectionMember):
     """
-    Show one challenge problems
+    Show one challenge problem
     """
     log = logging.getLogger(__name__)

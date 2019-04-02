@@ -15,16 +15,14 @@ class IdentifiedRecordShow(IdentifiedRecord, ExtShowOne):
     """
     Get a record by one of its identifiers
     """
-    # collection = 'measurement'
     log = logging.getLogger(__name__)
-    identifier_help_text = 'Data Catalog identifier'
 
     def get_parser(self, prog_name):
         parser = super(IdentifiedRecordShow, self).get_parser(prog_name)
         parser.add_argument(
             'identifier',
             type=str,
-            help=self.identifier_help_text
+            help='Data Catalog identifier'
         )
         parser.add_argument(
             'field',
