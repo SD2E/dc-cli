@@ -17,13 +17,21 @@ class IdentifiedRecordShow(IdentifiedRecord, ExtShowOne):
     """
     # collection = 'measurement'
     log = logging.getLogger(__name__)
+    identifier_help_text = 'Data Catalog identifier'
 
     def get_parser(self, prog_name):
         parser = super(IdentifiedRecordShow, self).get_parser(prog_name)
         parser.add_argument(
             'identifier',
             type=str,
-            help='A Data Catalog identifier'
+            help=self.identifier_help_text
+        )
+        parser.add_argument(
+            'field',
+            type=str,
+            default=None,
+            nargs='?',
+            help='Field from record (optional)'
         )
         return parser
 
@@ -42,7 +50,8 @@ class IdentifiedRecordShow(IdentifiedRecord, ExtShowOne):
                           mongo_username=self.app_args.mongo_username,
                           mongo_password=self.app_args.mongo_password,
                           mongo_database=self.app_args.mongo_database,
-                          verbose=verbosity
+                          verbose=verbosity,
+                          flatten=parsed_args.flatten_structs
                           )
 
         data = api.get_by_identifier(parsed_args.identifier)

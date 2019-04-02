@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Single record return now works. Logging now works and is configurable via LOGLEVEL env var
 * Filter the schema fields implementing document hierarchies
 * Column names are optionally Title-Cased
 * Rework subclasses to share a common configuration baseclass that holds collection name, display fields, etc

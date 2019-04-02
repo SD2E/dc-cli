@@ -26,6 +26,12 @@ class ExtShowOne(ShowOne):
             dest='return_identifiers',
             help="Return identifiers only"
         )
+        parser.add_argument(
+            '--flatten',
+            action='store_true',
+            dest='flatten_structs',
+            help="Flatten complex field values"
+        )
         return parser
 
 

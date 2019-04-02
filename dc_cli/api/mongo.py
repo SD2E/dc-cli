@@ -37,6 +37,7 @@ class DatabaseAPI(object):
                  api_server=API_SERVER,
                  api_token=API_TOKEN,
                  fields=None,
+                 flatten=False,
                  verbose=Verbosity.INDEXED):
 
         mongodb = {'host': mongo_host, 'port': mongo_port,
@@ -44,6 +45,7 @@ class DatabaseAPI(object):
                    'password': mongo_password}
 
         self.verbosity = verbose
+        self.flatten = flatten
         self.displayfields = fields
         self.db = Manager(mongodb)
 
@@ -93,6 +95,7 @@ class DatabaseAPI(object):
         if resp is not None:
             resp_type = typeduuid.get_uuidtype(resp['uuid'])
             filt_fields = self.get_fieldnames(resp_type, humanize=False)
+            DataCatalogRecord.set_flatten(self.flatten)
             DataCatalogRecord.set_fields(filt_fields)
             return DataCatalogRecord(resp).as_list()
 
