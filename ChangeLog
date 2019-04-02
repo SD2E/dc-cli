@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Initial implementation of single collection GET function
 * Add support for flattening struct fields
 * Single record return now works. Logging now works and is configurable via LOGLEVEL env var
 * Filter the schema fields implementing document hierarchies

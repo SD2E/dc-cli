@@ -1,5 +1,5 @@
 import logging
-from .collections import CollectionList
+from .collections import CollectionList, CollectionMember
 
 
 class Job:
@@ -10,5 +10,12 @@ class Job:
 class JobList(Job, CollectionList):
     """
     List pipeline jobs
+    """
+    log = logging.getLogger(__name__)
+
+
+class JobGet(Job, CollectionMember):
+    """
+    Show one pipeline job
     """
     log = logging.getLogger(__name__)

@@ -1,5 +1,5 @@
 import logging
-from .collections import CollectionList
+from .collections import CollectionList, CollectionMember
 
 
 class Sample:
@@ -10,5 +10,12 @@ class Sample:
 class SampleList(Sample, CollectionList):
     """
     List samples
+    """
+    log = logging.getLogger(__name__)
+
+
+class SampleGet(Sample, CollectionMember):
+    """
+    Show one sample
     """
     log = logging.getLogger(__name__)

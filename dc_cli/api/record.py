@@ -7,6 +7,7 @@ class DataCatalogRecord(AttrDict):
 
     fields = []
     log = logging.getLogger(__name__)
+    flatten = False
 
     @classmethod
     def set_fields(cls, field_names=[]):

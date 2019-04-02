@@ -5,6 +5,7 @@ from .collections import CollectionList, CollectionMember
 class Challenge:
     collection = 'challenge_problem'
     displayfields = ['uuid', 'id', 'title', 'status', 'updated']
+    identifier_name = 'uuid or id'
 
 
 class ChallengeList(Challenge, CollectionList):
