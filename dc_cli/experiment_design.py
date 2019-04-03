@@ -4,6 +4,8 @@ from .collections import CollectionList, CollectionMember
 
 class ExperimentDesign:
     collection = 'experiment_design'
+    displayfields = ['uuid', 'experiment_design_id',
+                     'title', 'status', 'updated']
     identifier_name = 'uuid or experiment_design_id'
 
 

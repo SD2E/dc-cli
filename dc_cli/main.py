@@ -31,15 +31,15 @@ class CatalogApp(App):
 
         parser.add_argument(
             '--mongo-host',
-            metavar='<mongo-host>',
+            metavar='HOSTNAME',
             dest='mongo_host',
             default=utils.env('MONGODB_HOST'),
-            help='MongoDB host (Env: MONGODB_HOST)'
+            help='MongoDB hostname (Env: MONGODB_HOST)'
         )
 
         parser.add_argument(
             '--mongo-port',
-            metavar='<mongo-port>',
+            metavar='PORT',
             dest='mongo_port',
             default=int(utils.env('MONGODB_PORT')),
             help='MongoDB port (Env: MONGODB_PORT)'
@@ -47,44 +47,54 @@ class CatalogApp(App):
 
         parser.add_argument(
             '--mongo-username',
-            metavar='<mongo-username>',
+            metavar='USERNAME',
             dest='mongo_username',
             default=utils.env('MONGODB_USERNAME'),
-            help='MongoDB port (Env: MONGODB_USERNAME)'
+            help='MongoDB username (Env: MONGODB_USERNAME)'
         )
 
         parser.add_argument(
             '--mongo-pass',
-            metavar='<mongo-pass>',
+            metavar='PASSWORD',
             dest='mongo_password',
             default=utils.env('MONGODB_PASSWORD'),
-            help='MongoDB port (Env: MONGODB_PASSWORD)'
+            help='MongoDB password (Env: MONGODB_PASSWORD)'
         )
 
         parser.add_argument(
             '--mongo-database',
-            metavar='<mongo-database>',
+            metavar='DATABASE',
             dest='mongo_database',
             default=utils.env('MONGODB_DATABASE'),
-            help='MongoDB port (Env: MONGODB_DATABASE)'
+            help='MongoDB database (Env: MONGODB_DATABASE)'
         )
+
+        parser.add_argument(
+            '--api-server',
+            metavar='URL',
+            dest='api_server',
+            default=utils.env('TACC_API_SERVER'),
+            help='TACC API server URL (Env: TACC_API_SERVER)'
+        )
+
         # provide Oauth2 token via CLI
         parser.add_argument(
-            '--tacc-acess-token',
-            metavar='<tacc-access-token>',
-            dest='tacc_access_token',
-            default=utils.env('ACCESS_TOKEN'),
-            help='TACC API access token (Env: ACCESS_TOKEN)'
+            '--access-token',
+            metavar='ACCESS_TOKEN',
+            dest='access_token',
+            default=None,
+            help='TACC API access token'
         )
 
+        # hidden option - allows Tapis to refresh its Oauth session
         parser.add_argument(
-            '--tacc-api-server',
-            metavar='<tacc-api-server>',
-            dest='tacc_api_server',
-            default=utils.env('API_SERVER'),
-            help='TACC API server URL (Env: API_SERVER)'
+            '--refresh-token',
+            metavar='REFRESH_TOKEN',
+            dest='refresh_token',
+            help=argparse.SUPPRESS
         )
 
+        # TODO: Options to manage MongoDB TLS, Tapis cert validation
         return parser
 
     def initialize_app(self, argv):
