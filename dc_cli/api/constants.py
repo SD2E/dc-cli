@@ -9,3 +9,4 @@ MONGODB_REPLICA_SET = 'rs0'
 MONGODB_USERNAME = 'readonly'
 MONGODB_PASSWORD = ''
 PAGESIZE = 20
+STORAGE_SYSTEM = 'data-sd2e-community'

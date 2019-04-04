@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* WIP: Add support for Agave operations in some commands
 * Additional GET methods
 * Initial implementation of single collection GET function
 * Add support for flattening struct fields

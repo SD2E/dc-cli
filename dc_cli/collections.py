@@ -1,13 +1,65 @@
 import logging
 
+from cliff.show import ShowOne
+from cliff.lister import Lister
 from dc_cli.api import DatabaseAPI, Verbosity
 from .extended import ExtLister, ExtShowOne
 from . import utils
 
 
-class CollectionList(ExtLister):
-    collection = None
+class MongoCollectionShowOne(ShowOne):
+    log = logging.getLogger(__name__)
+    log.debug('Initializing MongoCollectionShowOne')
+    api = None
     displayfields = None
+
+    def take_action(self, parsed_args):
+
+        verbosity = Verbosity.DEFAULT
+        if parsed_args.return_all:
+            verbosity = Verbosity.ALL
+        elif parsed_args.return_identifiers:
+            verbosity = Verbosity.IDENTIFIERS
+
+        self.api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
+                               mongo_port=self.app_args.mongo_port,
+                               mongo_username=self.app_args.mongo_username,
+                               mongo_password=self.app_args.mongo_password,
+                               mongo_database=self.app_args.mongo_database,
+                               fields=self.displayfields,
+                               verbose=verbosity
+                               )
+        return ((), ())
+
+
+class MongoCollectionLister(Lister):
+    log = logging.getLogger(__name__)
+    log.debug('Initializing MongoCollectionLister')
+    api = None
+    displayfields = None
+
+    def take_action(self, parsed_args):
+        self.log.debug(
+            'MongoCollectionLister.take_action: {}'.format(parsed_args))
+
+        verbosity = Verbosity.DEFAULT
+        if parsed_args.return_all:
+            verbosity = Verbosity.ALL
+        elif parsed_args.return_identifiers:
+            verbosity = Verbosity.IDENTIFIERS
+
+        self.api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
+                               mongo_port=self.app_args.mongo_port,
+                               mongo_username=self.app_args.mongo_username,
+                               mongo_password=self.app_args.mongo_password,
+                               mongo_database=self.app_args.mongo_database,
+                               fields=self.displayfields,
+                               verbose=verbosity
+                               )
+
+
+class CollectionList(MongoCollectionLister, ExtLister):
+    collection = None
     pagesize = utils.env('PAGESIZE', cast=int)
     log = logging.getLogger(__name__)
 
@@ -38,22 +90,7 @@ class CollectionList(ExtLister):
         return parser
 
     def take_action(self, parsed_args):
-
-        # Response verbosity
-        verbosity = Verbosity.DEFAULT
-        if parsed_args.return_all:
-            verbosity = Verbosity.ALL
-        elif parsed_args.return_identifiers:
-            verbosity = Verbosity.IDENTIFIERS
-
-        api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
-                          mongo_port=self.app_args.mongo_port,
-                          mongo_username=self.app_args.mongo_username,
-                          mongo_password=self.app_args.mongo_password,
-                          mongo_database=self.app_args.mongo_database,
-                          fields=self.displayfields,
-                          verbose=verbosity
-                          )
+        super().take_action(parsed_args)
 
         # Pagination
         if parsed_args.page is not None:
@@ -63,9 +100,9 @@ class CollectionList(ExtLister):
             limit = parsed_args.limit
             skip = parsed_args.skip
 
-        headers = api.get_fieldnames(
+        headers = self.api.get_fieldnames(
             self.collection, humanize=parsed_args.humanize)
-        data = api.query_collection(
+        data = self.api.query_collection(
             self.collection, limit=limit, skip=skip)
         collection_members = []
         for record in data:
@@ -74,12 +111,11 @@ class CollectionList(ExtLister):
         return (headers, tuple(collection_members))
 
 
-class CollectionMember(ExtShowOne):
+class CollectionMember(MongoCollectionShowOne, ExtShowOne):
     """
     Get a specific record from a collection
     """
     collection = None
-    displayfields = None
     pagesize = utils.env('PAGESIZE', cast=int)
     log = logging.getLogger(__name__)
     identifier_name = '{} identifier'.format(collection)
@@ -101,27 +137,12 @@ class CollectionMember(ExtShowOne):
         return parser
 
     def take_action(self, parsed_args):
+        super().take_action(parsed_args)
 
-        # Response verbosity
         # Note we do not currently permit the custom field set
-        verbosity = Verbosity.IDENTIFIERS
-        if parsed_args.return_all:
-            verbosity = Verbosity.ALL
-        elif parsed_args.return_identifiers:
-            verbosity = Verbosity.IDENTIFIERS
-
-        api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
-                          mongo_port=self.app_args.mongo_port,
-                          mongo_username=self.app_args.mongo_username,
-                          mongo_password=self.app_args.mongo_password,
-                          mongo_database=self.app_args.mongo_database,
-                          verbose=verbosity,
-                          flatten=parsed_args.flatten_structs
-                          )
-
-        data = api.get_collection_member_by_identifier(
+        data = self.api.get_collection_member_by_identifier(
             parsed_args.identifier, self.collection)
-        headers = api.get_fieldnames(
-            api.get_uuid_type(data[0]), humanize=parsed_args.humanize)
+        headers = self.api.get_fieldnames(
+            self.api.get_uuid_type(data[0]), humanize=parsed_args.humanize)
 
         return (tuple(headers), tuple(data))

@@ -40,6 +40,8 @@ class DatabaseAPI(object):
                  flatten=False,
                  verbose=Verbosity.INDEXED):
 
+        self.log.debug('Initializing MongoDB API')
+
         mongodb = {'host': mongo_host, 'port': mongo_port,
                    'database': mongo_database, 'username': mongo_username,
                    'password': mongo_password}
@@ -48,6 +50,7 @@ class DatabaseAPI(object):
         self.flatten = flatten
         self.displayfields = fields
         self.db = Manager(mongodb)
+        self.log.debug('(Initialized)')
 
     def get_fieldnames(self, name, filter=[], humanize=False):
 
@@ -74,7 +77,8 @@ class DatabaseAPI(object):
 
         return fieldnames
 
-    def query_collection(self, name, filter={}, limit=None, skip=None):
+    def query_collection(self, name, filter={}, limit=None,
+                         skip=None, raw=False):
         fields = self.get_fieldnames(name)
         proj = ordered_projection(fields)
         extras = dict()
@@ -87,30 +91,40 @@ class DatabaseAPI(object):
         if resp is not None:
             DataCatalogRecord.set_fields(fields)
             for r in resp:
-                yield DataCatalogRecord(r).as_list()
+                if raw:
+                    yield r
+                else:
+                    yield DataCatalogRecord(r).as_list()
 
-    def get_by_identifier(self, identifier):
+    def get_by_identifier(self, identifier, raw=False):
         resp = self.db.get_by_identifier(identifier, permissive=False)
         self.log.debug('Response: {}'.format(resp))
         if resp is not None:
-            resp_type = typeduuid.get_uuidtype(resp['uuid'])
-            filt_fields = self.get_fieldnames(resp_type, humanize=False)
-            DataCatalogRecord.set_flatten(self.flatten)
-            DataCatalogRecord.set_fields(filt_fields)
-            return DataCatalogRecord(resp).as_list()
+            if raw:
+                return resp
+            else:
+                resp_type = typeduuid.get_uuidtype(resp['uuid'])
+                filt_fields = self.get_fieldnames(resp_type, humanize=False)
+                DataCatalogRecord.set_flatten(self.flatten)
+                DataCatalogRecord.set_fields(filt_fields)
+                return DataCatalogRecord(resp).as_list()
 
-    def get_collection_member_by_identifier(self, identifier, collection=None):
+    def get_collection_member_by_identifier(self, identifier,
+                                            collection=None, raw=False):
         self.log.debug('Ident, Coll: {}, {}'.format(identifier, collection))
         if collection is None:
             return self.get_by_identifier(identifier)
         resp = self.db.stores[collection].find_one_by_identifier(identifier)
         self.log.debug('Response: {}'.format(resp))
         if resp is not None:
-            resp_type = typeduuid.get_uuidtype(resp['uuid'])
-            filt_fields = self.get_fieldnames(resp_type, humanize=False)
-            DataCatalogRecord.set_flatten(self.flatten)
-            DataCatalogRecord.set_fields(filt_fields)
-            return DataCatalogRecord(resp).as_list()
+            if raw:
+                return resp
+            else:
+                resp_type = typeduuid.get_uuidtype(resp['uuid'])
+                filt_fields = self.get_fieldnames(resp_type, humanize=False)
+                DataCatalogRecord.set_flatten(self.flatten)
+                DataCatalogRecord.set_fields(filt_fields)
+                return DataCatalogRecord(resp).as_list()
 
     def get_uuid_type(self, uuid):
         return typeduuid.get_uuidtype(uuid)
