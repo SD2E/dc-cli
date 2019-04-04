@@ -127,13 +127,6 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
             type=str,
             help=self.identifier_name
         )
-        parser.add_argument(
-            'field',
-            type=str,
-            default=None,
-            nargs='?',
-            help='Field from record (optional)'
-        )
         return parser
 
     def take_action(self, parsed_args):

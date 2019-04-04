@@ -1,6 +1,7 @@
 import logging
 from .mongo import DatabaseAPI, Verbosity
 from .agave import AgaveAPI, AgaveError
+from .record import DataCatalogRecord
 
 try:  # Python 2.7
     from logging import NullHandler

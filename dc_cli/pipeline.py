@@ -1,5 +1,8 @@
 import logging
 from .collections import CollectionList
+from collections import namedtuple
+
+PipelineRecord = namedtuple('Pipeline', 'uuid name id')
 
 
 class Pipeline:
