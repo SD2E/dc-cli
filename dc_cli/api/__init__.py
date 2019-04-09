@@ -1,6 +1,7 @@
 import logging
+from agavepy.agave import AgaveError
 from .mongo import DatabaseAPI, Verbosity
-from .agave import AbacoAPI, AgaveAPI, AgaveError
+from .agave import AbacoAPI, AgaveAPI
 from .record import DataCatalogRecord
 from .pipelinejobs import PipelineJobEvent
 

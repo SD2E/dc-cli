@@ -4,7 +4,7 @@ from cliff.show import ShowOne
 from cliff.lister import Lister
 from dc_cli.api import DatabaseAPI, Verbosity
 from .extended import ExtLister, ExtShowOne
-from . import utils
+from . import settings
 
 
 class MongoCollectionShowOne(ShowOne):
@@ -66,7 +66,7 @@ class CollectionList(MongoCollectionLister, ExtLister):
     """List members of a specific MongoDB collection
     """
     collection = None
-    pagesize = utils.env('PAGESIZE', cast=int)
+    pagesize = settings.PAGESIZE
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
@@ -125,7 +125,7 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
     Get a specific record from a MongoDB collection
     """
     collection = None
-    pagesize = utils.env('PAGESIZE', cast=int)
+    pagesize = settings.PAGESIZE
     log = logging.getLogger(__name__)
     identifier_name = '{} identifier'.format(collection)
 
@@ -134,6 +134,7 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
         parser.add_argument(
             'identifier',
             type=str,
+            metavar='IDENTIFIER',
             help=self.identifier_name
         )
         return parser
@@ -155,7 +156,7 @@ class CollectionMemberFieldList(MongoCollectionLister):
     Get list values from a subfield of specific MongoDb record
     """
     collection = None
-    pagesize = utils.env('PAGESIZE', cast=int)
+    pagesize = settings.PAGESIZE
     log = logging.getLogger(__name__)
     identifier_name = '{} identifier'.format(collection)
 

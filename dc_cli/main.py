@@ -29,7 +29,7 @@ class CatalogApp(App):
             description, version)
 
         parser.add_argument(
-            '--mongo-host',
+            '--host',
             metavar='HOSTNAME',
             dest='mongo_host',
             default=settings.MONGODB_HOST,
@@ -37,7 +37,7 @@ class CatalogApp(App):
         )
 
         parser.add_argument(
-            '--mongo-port',
+            '--port',
             metavar='PORT',
             dest='mongo_port',
             default=settings.MONGODB_PORT,
@@ -45,7 +45,7 @@ class CatalogApp(App):
         )
 
         parser.add_argument(
-            '--mongo-username',
+            '--username',
             metavar='USERNAME',
             dest='mongo_username',
             default=settings.MONGODB_USERNAME,
@@ -53,7 +53,7 @@ class CatalogApp(App):
         )
 
         parser.add_argument(
-            '--mongo-pass',
+            '--password',
             metavar='PASSWORD',
             dest='mongo_password',
             default=settings.MONGODB_PASSWORD,
@@ -61,7 +61,7 @@ class CatalogApp(App):
         )
 
         parser.add_argument(
-            '--mongo-database',
+            '--database',
             metavar='DATABASE',
             dest='mongo_database',
             default=settings.MONGODB_DATABASE,
@@ -78,7 +78,7 @@ class CatalogApp(App):
 
         # provide Oauth2 token via CLI
         parser.add_argument(
-            '--access-token',
+            '--token',
             metavar='ACCESS_TOKEN',
             dest='access_token',
             default=None,
