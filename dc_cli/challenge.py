@@ -17,6 +17,6 @@ class ChallengeList(Challenge, CollectionList):
 
 class ChallengeGet(Challenge, CollectionMember):
     """
-    Show one challenge problem
+    Get one challenge problem
     """
     log = logging.getLogger(__name__)

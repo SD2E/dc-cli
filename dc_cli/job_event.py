@@ -1,12 +1,11 @@
 import argparse
 import json
 import logging
-from pprint import pprint
 
 from .api import AbacoAPI, DataCatalogRecord, PipelineJobEvent
 from .job import JobShow, CollectionMember
 from .token import get_token
-from . import utils
+from . import settings
 
 
 class JobSendEvent(JobShow, CollectionMember):
@@ -14,8 +13,8 @@ class JobSendEvent(JobShow, CollectionMember):
     Send an event to a pipeline job
     """
     log = logging.getLogger(__name__)
-    actor_id = utils.env('JOB_MANAGER_ID')
-    authz_nonce = utils.env('JOB_MANAGER_NONCE')
+    actor_id = settings.JOB_MANAGER_ID
+    authz_nonce = settings.JOB_MANAGER_NONCE
     event_name = 'update'
 
     def get_parser(self, prog_name):
@@ -58,7 +57,7 @@ class JobSendEvent(JobShow, CollectionMember):
             '--key',
             metavar='<admin-key>',
             dest='key',
-            default=utils.env('ADMIN_TOKEN_KEY'),
+            default=settings.ADMIN_TOKEN_KEY,
             help='Key for generating an admin token'
         )
         parser.add_argument(

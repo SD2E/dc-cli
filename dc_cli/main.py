@@ -5,8 +5,7 @@ import sys
 from cliff.app import App
 from cliff.commandmanager import CommandManager
 from pbr.version import VersionInfo
-
-from . import utils
+from . import settings
 
 version_info = VersionInfo('dc_cli')
 
@@ -14,8 +13,8 @@ version_info = VersionInfo('dc_cli')
 class CatalogApp(App):
 
     logger = logging.getLogger(__name__)
-    if utils.env('LOGLEVEL') is not None:
-        logging.basicConfig(level=utils.env('LOGLEVEL'))
+    if settings.LOGLEVEL is not None:
+        logging.basicConfig(level=settings.LOGLEVEL)
 
     def __init__(self):
         super(CatalogApp, self).__init__(
@@ -33,48 +32,48 @@ class CatalogApp(App):
             '--mongo-host',
             metavar='HOSTNAME',
             dest='mongo_host',
-            default=utils.env('MONGODB_HOST'),
-            help='MongoDB hostname (Env: MONGODB_HOST)'
+            default=settings.MONGODB_HOST,
+            help='MongoDB hostname'
         )
 
         parser.add_argument(
             '--mongo-port',
             metavar='PORT',
             dest='mongo_port',
-            default=int(utils.env('MONGODB_PORT')),
-            help='MongoDB port (Env: MONGODB_PORT)'
+            default=settings.MONGODB_PORT,
+            help='MongoDB port'
         )
 
         parser.add_argument(
             '--mongo-username',
             metavar='USERNAME',
             dest='mongo_username',
-            default=utils.env('MONGODB_USERNAME'),
-            help='MongoDB username (Env: MONGODB_USERNAME)'
+            default=settings.MONGODB_USERNAME,
+            help='MongoDB username'
         )
 
         parser.add_argument(
             '--mongo-pass',
             metavar='PASSWORD',
             dest='mongo_password',
-            default=utils.env('MONGODB_PASSWORD'),
-            help='MongoDB password (Env: MONGODB_PASSWORD)'
+            default=settings.MONGODB_PASSWORD,
+            help='MongoDB password'
         )
 
         parser.add_argument(
             '--mongo-database',
             metavar='DATABASE',
             dest='mongo_database',
-            default=utils.env('MONGODB_DATABASE'),
-            help='MongoDB database (Env: MONGODB_DATABASE)'
+            default=settings.MONGODB_DATABASE,
+            help='MongoDB database'
         )
 
         parser.add_argument(
             '--api-server',
-            metavar='URL',
+            metavar='API_URL',
             dest='api_server',
-            default=utils.env('TACC_API_SERVER'),
-            help='TACC API server URL (Env: TACC_API_SERVER)'
+            default=settings.TACC_API_SERVER,
+            help='TACC API server URL'
         )
 
         # provide Oauth2 token via CLI

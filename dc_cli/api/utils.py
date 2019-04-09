@@ -4,6 +4,8 @@
 
 
 def flatten_json(y, delim='.'):
+    """Flatten a nested JSON document using delimited key names
+    """
     out = {}
 
     def flatten(x, name=''):

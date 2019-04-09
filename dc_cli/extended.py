@@ -11,17 +11,18 @@ class ExtShowOne(ShowOne):
         parser.add_argument(
             '--human-ids',
             action='store_true',
+            default=self.humanize,
             dest='humanize',
             help=argparse.SUPPRESS
         )
         parser.add_argument(
-            '-x, --extended',
+            '-x', '--extended',
             action='store_true',
             dest='return_all',
             help="Return all fields"
         )
         parser.add_argument(
-            '-i, --ids',
+            '-i', '--ids',
             action='store_true',
             dest='return_identifiers',
             help="Return identifiers only"
@@ -41,19 +42,20 @@ class ExtLister(Lister):
     def get_parser(self, prog_name):
         parser = super(ExtLister, self).get_parser(prog_name)
         parser.add_argument(
-            '--machine_fieldnames',
-            action='store_false',
+            '--human-ids',
+            action='store_true',
+            default=self.humanize,
             dest='humanize',
             help=argparse.SUPPRESS
         )
         parser.add_argument(
-            '-x, --extended',
+            '-x', '--extended',
             action='store_true',
             dest='return_all',
             help="Return all fields"
         )
         parser.add_argument(
-            '-i, --ids',
+            '-i', '--ids',
             action='store_true',
             dest='return_identifiers',
             help="Return identifiers only"

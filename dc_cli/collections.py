@@ -63,6 +63,8 @@ class MongoCollectionLister(Lister):
 
 
 class CollectionList(MongoCollectionLister, ExtLister):
+    """List members of a specific MongoDB collection
+    """
     collection = None
     pagesize = utils.env('PAGESIZE', cast=int)
     log = logging.getLogger(__name__)
@@ -120,7 +122,7 @@ class CollectionList(MongoCollectionLister, ExtLister):
 
 class CollectionMember(MongoCollectionShowOne, ExtShowOne):
     """
-    Get a specific record from a collection
+    Get a specific record from a MongoDB collection
     """
     collection = None
     pagesize = utils.env('PAGESIZE', cast=int)
@@ -150,7 +152,7 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
 
 class CollectionMemberFieldList(MongoCollectionLister):
     """
-    Get list values from a specific record's subfield
+    Get list values from a subfield of specific MongoDb record
     """
     collection = None
     pagesize = utils.env('PAGESIZE', cast=int)

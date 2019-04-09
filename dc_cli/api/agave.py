@@ -1,11 +1,11 @@
-from agavepy.agave import Agave, AgaveError
-import logging
+from agavepy.agave import Agave
 import bacanora
-from .. import utils
-from .constants import (MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE,
-                        MONGODB_USERNAME, MONGODB_PASSWORD,
-                        API_SERVER, PAGESIZE, STORAGE_SYSTEM,
-                        REACTOR_MESSAGE_SYNC)
+import logging
+from .. import settings
+
+REACTOR_MESSAGE_SYNC = settings.REACTOR_MESSAGE_SYNC
+TACC_API_SERVER = settings.TACC_API_SERVER
+TACC_PRIMARY_STORAGE_SYSTEM = settings.TACC_PRIMARY_STORAGE_SYSTEM
 
 
 class Verbosity:
@@ -25,7 +25,7 @@ class AgaveAPI(object):
     log = logging.getLogger(__name__)
     client = None
 
-    def __init__(self, api_server=API_SERVER,
+    def __init__(self, api_server=TACC_API_SERVER,
                  access_token=None,
                  refresh_token=None,
                  verbose=Verbosity.DEFAULT):
@@ -37,7 +37,7 @@ class AgaveAPI(object):
                 ag = Agave(api_server=api_server, token=access_token)
             else:
                 # Use local credential cache
-                self.log.debug('Laoding from local Tapis credential cache')
+                self.log.debug('Loading from local Tapis credential cache')
                 ag = Agave.restore()
         except Exception:
             self.log.exception('Unable to initialize Tapis client')
@@ -47,7 +47,7 @@ class AgaveAPI(object):
         self.verbosity = verbose
 
     def download(self, file_to_download, local_filename=None,
-                 system_id=STORAGE_SYSTEM):
+                 system_id=TACC_PRIMARY_STORAGE_SYSTEM):
         return bacanora.download(self.client,
                                  file_to_download,
                                  local_filename=local_filename,
@@ -63,7 +63,7 @@ class AbacoAPI(object):
     sync = REACTOR_MESSAGE_SYNC
 
     def __init__(self,
-                 api_server=API_SERVER,
+                 api_server=TACC_API_SERVER,
                  nonce=None,
                  access_token=None,
                  refresh_token=None,

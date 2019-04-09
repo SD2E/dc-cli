@@ -1,11 +1,7 @@
-import json
 import logging
-from .constants import (MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE,
-                        MONGODB_USERNAME, MONGODB_PASSWORD,
-                        API_SERVER, API_TOKEN, PAGESIZE)
+from .. import settings
 from datacatalog.managers import Manager
 from datacatalog.identifiers import typeduuid
-
 from .record import DataCatalogRecord
 
 
@@ -21,7 +17,7 @@ FILTERED_FIELDS = ['experiment_designs', 'experiments',
 
 
 class DatabaseAPI(object):
-    """Main class for accessing a Data Catalog via MongoDB connection
+    """Basic class for accessing a Data Catalog via its MongoDB connection
 
     Args:
         verbose (bool): Whether to return complete or summary responses
@@ -29,13 +25,13 @@ class DatabaseAPI(object):
 
     log = logging.getLogger(__name__)
 
-    def __init__(self, mongo_host=MONGODB_HOST,
-                 mongo_port=MONGODB_PORT,
-                 mongo_database=MONGODB_DATABASE,
-                 mongo_username=MONGODB_USERNAME,
-                 mongo_password=MONGODB_PASSWORD,
-                 api_server=API_SERVER,
-                 api_token=API_TOKEN,
+    def __init__(self, mongo_host=settings.MONGODB_HOST,
+                 mongo_port=settings.MONGODB_PORT,
+                 mongo_database=settings.MONGODB_DATABASE,
+                 mongo_username=settings.MONGODB_USERNAME,
+                 mongo_password=settings.MONGODB_PASSWORD,
+                 api_server=settings.TACC_API_SERVER,
+                 api_token=None,
                  fields=None,
                  flatten=False,
                  verbose=Verbosity.INDEXED):
@@ -53,7 +49,12 @@ class DatabaseAPI(object):
         self.log.debug('(Initialized)')
 
     def get_fieldnames(self, name, filter=[], humanize=False):
+        """Dynamically get field names for display in CLI
 
+        The function either inspects the schema for a given collection
+        and makes an informed guess on which elements are amenable to
+        display or relies on values provided in self.displayfields
+        """
         fieldnames = None
         if self.verbosity == Verbosity.ALL:
             fieldnames = self.db.stores[name].get_fields()
@@ -79,6 +80,8 @@ class DatabaseAPI(object):
 
     def query_collection(self, name, filter={}, limit=None,
                          skip=None, raw=False):
+        """Run a MongoDB query in JSON format against a specific named collection
+        """
         fields = self.get_fieldnames(name)
         proj = ordered_projection(fields)
         extras = dict()
@@ -97,6 +100,8 @@ class DatabaseAPI(object):
                     yield DataCatalogRecord(r).as_list()
 
     def get_by_identifier(self, identifier, raw=False):
+        """Fetch the MongoDB record for any indexed identifier
+        """
         resp = self.db.get_by_identifier(identifier, permissive=False)
         self.log.debug('Response: {}'.format(resp))
         if resp is not None:
@@ -111,6 +116,8 @@ class DatabaseAPI(object):
 
     def get_collection_member_by_identifier(self, identifier,
                                             collection=None, raw=False):
+        """Fetch the MongoDB record for any indexed identifier from a collection
+        """
         self.log.debug('Ident, Coll: {}, {}'.format(identifier, collection))
         if collection is None:
             return self.get_by_identifier(identifier)
@@ -127,6 +134,7 @@ class DatabaseAPI(object):
                 return DataCatalogRecord(resp).as_list()
 
     def get_uuid_type(self, uuid):
+        """Return the TypedUUID type for this class or subclass"""
         return typeduuid.get_uuidtype(uuid)
 
 

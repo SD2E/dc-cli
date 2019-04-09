@@ -4,7 +4,7 @@ from cliff.show import ShowOne
 from .api import DatabaseAPI, Verbosity, AgaveAPI, AgaveError
 from .collections import (MongoCollectionShowOne,
                           CollectionList, CollectionMember)
-from . import utils
+from . import settings
 
 
 class File:
@@ -71,7 +71,7 @@ class FileGet(File, MongoCollectionShowOne):
             parsed_args.identifier, self.collection, raw=True)
 
         system_id = data.get(
-            'storage_system', utils.env('STORAGE_SYSTEM'))
+            'storage_system', settings.TACC_PRIMARY_STORAGE_SYSTEM)
 
         resp = tapis.download(data['name'], parsed_args.output,
                               system_id=system_id)

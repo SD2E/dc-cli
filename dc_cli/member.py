@@ -1,7 +1,6 @@
 import logging
 from cliff.show import ShowOne
 from dc_cli.api import DatabaseAPI, Verbosity
-from . import utils
 
 
 class MemberShow(ShowOne):
@@ -16,25 +15,18 @@ class MemberShow(ShowOne):
         parser.add_argument('identifier', help='A valid identifier')
 
         parser.add_argument(
-            '-x, --extended',
+            '-x', '--extended',
             action='store_true',
             dest='return_all',
             help="Return all fields"
         )
 
         parser.add_argument(
-            '-i, --ids',
+            '-i', '--ids',
             action='store_true',
             dest='return_identifiers',
             help="Return identifiers only"
         )
-
-        # parser.add_argument(
-        #     '-t, --type',
-        #     action='store_true',
-        #     dest='return_type',
-        #     help="Return identifier type only"
-        # )
 
         return parser
 

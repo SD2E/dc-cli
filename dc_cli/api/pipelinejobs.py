@@ -5,6 +5,8 @@ from datacatalog.tokens import Token
 
 
 class PipelineJobEvent(AttrDict):
+    """Simple container and validator class for a PipelineJob Event
+    """
     # param name, mandatory?, attr_name, default
     PARAMS = [('uuid', True, 'uuid', None),
               ('name', True, 'name', None),
@@ -27,4 +29,3 @@ class PipelineJobEvent(AttrDict):
         # validate data is dict
         assert isinstance(self.data, dict)
         self.token = Token(self.token)
-        super().__init__()

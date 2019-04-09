@@ -2,12 +2,12 @@ import os
 import logging
 from cliff.show import ShowOne
 from datacatalog.tokens import get_admin_token, get_admin_lifetime
-from . import utils
+from . import settings
 
 
 class TokenShow(ShowOne):
     """
-    Get an administrative token
+    Return current administrative token
     """
 
     log = logging.getLogger(__name__)
@@ -18,8 +18,8 @@ class TokenShow(ShowOne):
             '--key',
             metavar='<admin-key>',
             dest='key',
-            default=utils.env('ADMIN_TOKEN_KEY'),
-            help='Admin token key (Env: ADMIN_TOKEN_KEY)'
+            default=settings.ADMIN_TOKEN_KEY,
+            help='Admin token key'
         )
         return parser
 

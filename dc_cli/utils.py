@@ -3,7 +3,7 @@ import warnings
 import six
 from dotenv import load_dotenv, find_dotenv
 from dateutil.parser import parse
-from dc_cli.api import constants
+from . import constants
 
 BOOLEAN_TRUE_STRINGS = ('true', 'on', 'ok', 'y', 'yes', '1')
 

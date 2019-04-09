@@ -1,10 +1,8 @@
-import argparse
 import logging
 from .collections import (
     CollectionList, CollectionMember, CollectionMemberFieldList)
-from .api import DataCatalogRecord, AgaveAPI
+from .api import DataCatalogRecord
 from .pipeline import PipelineRecord
-from . import utils
 
 
 class Job:

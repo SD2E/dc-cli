@@ -1,13 +1,9 @@
 import logging
 from dc_cli.api import DatabaseAPI, Verbosity
-from .extended import ExtShowOne, ExtLister
+from .extended import ExtShowOne
 
 
 class IdentifiedRecord:
-    pass
-
-
-class IdentifiedRecordList(IdentifiedRecord, ExtLister):
     pass
 
 

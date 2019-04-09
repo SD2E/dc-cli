@@ -4,7 +4,8 @@ from .utils import flatten_json
 
 
 class DataCatalogRecord(AttrDict):
-
+    """Container and formatted class for Data Catalog records
+    """
     fields = []
     log = logging.getLogger(__name__)
     flatten = False
