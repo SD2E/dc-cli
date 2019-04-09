@@ -1,7 +1,8 @@
 import logging
 from .mongo import DatabaseAPI, Verbosity
-from .agave import AgaveAPI, AgaveError
+from .agave import AbacoAPI, AgaveAPI, AgaveError
 from .record import DataCatalogRecord
+from .pipelinejobs import PipelineJobEvent
 
 try:  # Python 2.7
     from logging import NullHandler

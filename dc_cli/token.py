@@ -1,3 +1,4 @@
+import os
 import logging
 from cliff.show import ShowOne
 from datacatalog.tokens import get_admin_token, get_admin_lifetime
@@ -24,7 +25,12 @@ class TokenShow(ShowOne):
 
     def take_action(self, parsed_args):
         column_headers = ('token', 'expires')
-        token = get_admin_token(parsed_args.key)
+        token = get_token(parsed_args.key)
         expires = get_admin_lifetime()
         record = (token, expires)
         return (column_headers, record)
+
+
+def get_token(key):
+    os.environ['CATALOG_ADMIN_TOKEN_KEY'] = key
+    return get_admin_token(key)

@@ -43,7 +43,8 @@ class FileGet(File, MongoCollectionShowOne):
             help=self.identifier_name
         )
         parser.add_argument(
-            '-O, --output',
+            '-O',
+            '--output',
             dest='output',
             default=None,
             help='Destination file path'

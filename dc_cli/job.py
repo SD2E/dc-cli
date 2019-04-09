@@ -1,12 +1,16 @@
+import argparse
 import logging
-from .collections import CollectionList, CollectionMember
-from .api import DataCatalogRecord
+from .collections import (
+    CollectionList, CollectionMember, CollectionMemberFieldList)
+from .api import DataCatalogRecord, AgaveAPI
 from .pipeline import PipelineRecord
+from . import utils
 
 
 class Job:
     collection = 'pipelinejob'
     displayfields = ['uuid', 'state', 'updated']
+    identifier_name = 'Pipeline Job UUID'
 
     def _lookup_pipeline(self, pipeline_uuid):
         resp = self.api.get_collection_member_by_identifier(
@@ -75,3 +79,22 @@ class JobShow(Job, CollectionMember):
         data.append(pipeline.name)
 
         return (tuple(headers), tuple(data))
+
+
+class JobShowHistory(Job, CollectionMemberFieldList):
+    """Show a pipeline job's event history"""
+
+    def take_action(self, parsed_args):
+
+        super().take_action(parsed_args)
+        headers = ['uuid', 'date', 'name']
+        resp = self.api.get_collection_member_by_identifier(
+            parsed_args.identifier, self.collection, raw=True)
+
+        resp_history = resp.get('history')
+        history = list()
+        DataCatalogRecord.set_fields(headers)
+        for hst in resp_history:
+            history.append(DataCatalogRecord(hst).as_list())
+
+        return (headers, tuple(history))

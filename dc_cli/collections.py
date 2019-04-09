@@ -16,10 +16,12 @@ class MongoCollectionShowOne(ShowOne):
     def take_action(self, parsed_args):
 
         verbosity = Verbosity.DEFAULT
-        if parsed_args.return_all:
-            verbosity = Verbosity.ALL
-        elif parsed_args.return_identifiers:
-            verbosity = Verbosity.IDENTIFIERS
+        if 'return_all' in parsed_args:
+            if parsed_args.return_all:
+                verbosity = Verbosity.ALL
+        elif 'return_identifiers' in parsed_args:
+            if parsed_args.return_identifiers:
+                verbosity = Verbosity.IDENTIFIERS
 
         self.api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
                                mongo_port=self.app_args.mongo_port,
@@ -43,10 +45,12 @@ class MongoCollectionLister(Lister):
             'MongoCollectionLister.take_action: {}'.format(parsed_args))
 
         verbosity = Verbosity.DEFAULT
-        if parsed_args.return_all:
-            verbosity = Verbosity.ALL
-        elif parsed_args.return_identifiers:
-            verbosity = Verbosity.IDENTIFIERS
+        if 'return_all' in parsed_args:
+            if parsed_args.return_all:
+                verbosity = Verbosity.ALL
+        elif 'return_identifiers' in parsed_args:
+            if parsed_args.return_identifiers:
+                verbosity = Verbosity.IDENTIFIERS
 
         self.api = DatabaseAPI(mongo_host=self.app_args.mongo_host,
                                mongo_port=self.app_args.mongo_port,
@@ -67,21 +71,24 @@ class CollectionList(MongoCollectionLister, ExtLister):
         parser = super(CollectionList, self).get_parser(prog_name)
 
         parser.add_argument(
-            '-l, --limit',
+            '-l,'
+            '--limit',
             dest='limit',
             type=int,
             help="Return first [l] records"
         )
 
         parser.add_argument(
-            '-k, --skip',
+            '-k',
+            '--skip',
             dest='skip',
             type=int,
             help="Skip first [k] records"
         )
 
         parser.add_argument(
-            '-p, --page',
+            '-p',
+            '--page',
             dest='page',
             type=int,
             help="Return page [p] of {} records".format(self.pagesize)
@@ -139,3 +146,22 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
             self.api.get_uuid_type(data[0]), humanize=parsed_args.humanize)
 
         return (tuple(headers), tuple(data))
+
+
+class CollectionMemberFieldList(MongoCollectionLister):
+    """
+    Get list values from a specific record's subfield
+    """
+    collection = None
+    pagesize = utils.env('PAGESIZE', cast=int)
+    log = logging.getLogger(__name__)
+    identifier_name = '{} identifier'.format(collection)
+
+    def get_parser(self, prog_name):
+        parser = super(CollectionMemberFieldList, self).get_parser(prog_name)
+        parser.add_argument(
+            'identifier',
+            type=str,
+            help=self.identifier_name
+        )
+        return parser

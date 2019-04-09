@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Added a (hacky) resolution of pipeline.name to job record display
 * Implemented 'dc file get', which downloads any file by name or other identifier
 * WIP: Add support for Agave operations in some commands
 * Additional GET methods
