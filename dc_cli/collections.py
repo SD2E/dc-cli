@@ -14,6 +14,7 @@ class CollectionBase:
     collection_name = None
     display_fields = None
     id_fields = None
+    pagesize = settings.PAGESIZE
 
     @classmethod
     def humanized_id_fields(cls):
@@ -154,10 +155,12 @@ class CollectionMemberFieldList(MongoCollectionLister):
     """
 
     def get_parser(self, prog_name):
+        id_display_name = '{} {}'.format(
+            self.collection_name, self.humanized_id_fields())
         parser = super(CollectionMemberFieldList, self).get_parser(prog_name)
         parser.add_argument(
             'identifier',
             type=str,
-            help=self.id_display_name
+            help=id_display_name
         )
         return parser

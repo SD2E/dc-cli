@@ -16,7 +16,7 @@ class SampleList(Sample, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class SampleGet(Sample, CollectionMember):
+class SampleShow(Sample, CollectionMember):
     """
     Show one sample
     """

@@ -17,7 +17,7 @@ class ExperimentList(Experiment, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class ExperimentGet(Experiment, CollectionMember):
+class ExperimentShow(Experiment, CollectionMember):
     """
     Show one experiment
     """

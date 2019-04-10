@@ -17,7 +17,7 @@ class ExperimentDesignList(ExperimentDesign, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class ExperimentDesignGet(ExperimentDesign, CollectionMember):
+class ExperimentDesignShow(ExperimentDesign, CollectionMember):
     """
     Show one experiment request/design
     """

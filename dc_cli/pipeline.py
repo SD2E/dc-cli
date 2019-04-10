@@ -19,7 +19,7 @@ class PipelineList(Pipeline, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class PipelineGet(Pipeline, CollectionMember):
+class PipelineShow(Pipeline, CollectionMember):
     """
     Show one pipeline
     """

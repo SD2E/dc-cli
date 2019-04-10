@@ -8,7 +8,7 @@ from .token import get_token
 from . import settings
 
 
-class JobSendEvent(JobShow, CollectionMember):
+class JobEventSend(JobShow, CollectionMember):
     """
     Send an event to a pipeline job
     """
@@ -18,7 +18,7 @@ class JobSendEvent(JobShow, CollectionMember):
     event_name = 'update'
 
     def get_parser(self, prog_name):
-        parser = super(JobSendEvent, self).get_parser(prog_name)
+        parser = super(JobEventSend, self).get_parser(prog_name)
         parser.set_defaults(identifier=None)
         parser.add_argument(
             'event_name',

@@ -80,7 +80,7 @@ class JobShow(Job, CollectionMember):
         return (tuple(headers), tuple(data))
 
 
-class JobShowHistory(Job, CollectionMemberFieldList):
+class JobHistoryShow(Job, CollectionMemberFieldList):
     """Show a pipeline job's event history"""
 
     def take_action(self, parsed_args):

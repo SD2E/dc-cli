@@ -18,7 +18,7 @@ class MeasurementList(Measurement, CollectionList):
     log = logging.getLogger(__name__)
 
 
-class MeasurementGet(Measurement, CollectionMember):
+class MeasurementShow(Measurement, CollectionMember):
     """
     Show one measurement
     """
