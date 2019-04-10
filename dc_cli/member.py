@@ -5,7 +5,7 @@ from dc_cli.api import DatabaseAPI, Verbosity
 
 class MemberShow(ShowOne):
     collection = None
-    displayfields = None
+    display_fields = None
     pagesize = 1
     log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class MemberShow(ShowOne):
                           mongo_username=self.app_args.mongo_username,
                           mongo_password=self.app_args.mongo_password,
                           mongo_database=self.app_args.mongo_database,
-                          fields=self.displayfields,
+                          fields=self.display_fields,
                           verbose=verbosity
                           )
 

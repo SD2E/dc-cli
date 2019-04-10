@@ -4,7 +4,10 @@ from .collections import CollectionList, CollectionMember
 
 class Measurement:
     collection = 'measurement'
-    displayfields = ['uuid', 'measurement_type', 'measurement_name']
+    collection_name = 'Measurement'
+    display_fields = [
+        'uuid', 'measurement_id', 'measurement_name', 'measurement_type']
+    id_fields = ['uuid', 'measurement_id']
 
 
 class MeasurementList(Measurement, CollectionList):

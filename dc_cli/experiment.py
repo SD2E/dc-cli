@@ -4,8 +4,10 @@ from .collections import CollectionList, CollectionMember
 
 class Experiment:
     collection = 'experiment'
-    displayfields = ['uuid', 'experiment_id', 'title']
-    identifier_name = 'uuid or experiment_id'
+    display_fields = ['uuid', 'experiment_id', 'title']
+    # identifier_name = 'uuid or experiment_id'
+    collection_name = 'Experiment'
+    id_fields = ['uuid', 'experiment_id']
 
 
 class ExperimentList(Experiment, CollectionList):

@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Minor fixes to get settings working. Improvements to various option metavariables to improve clarity when running --help
 * Refcator to use a settings module hybridized w the utils.env module from atmo-cli
 * Implemented job event management
 * Added a (hacky) resolution of pipeline.name to job record display

@@ -29,3 +29,7 @@ class PipelineJobEvent(AttrDict):
         # validate data is dict
         assert isinstance(self.data, dict)
         self.token = Token(self.token)
+
+    @classmethod
+    def event_names(cls):
+        return JobStateMachine.get_events()

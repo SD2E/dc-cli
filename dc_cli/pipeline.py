@@ -7,7 +7,9 @@ PipelineRecord = namedtuple('Pipeline', 'uuid name id')
 
 class Pipeline:
     collection = 'pipeline'
-    displayfields = ['uuid', 'name', 'description']
+    collection_name = 'Pipeline'
+    display_fields = ['uuid', 'name', 'description']
+    id_fields = ['uuid']
 
 
 class PipelineList(Pipeline, CollectionList):

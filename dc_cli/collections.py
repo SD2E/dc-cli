@@ -7,11 +7,21 @@ from .extended import ExtLister, ExtShowOne
 from . import settings
 
 
-class MongoCollectionShowOne(ShowOne):
-    log = logging.getLogger(__name__)
-    log.debug('Initializing MongoCollectionShowOne')
+class CollectionBase:
     api = None
-    displayfields = None
+    log = logging.getLogger(__name__)
+    collection = None
+    collection_name = None
+    display_fields = None
+    id_fields = None
+
+    @classmethod
+    def humanized_id_fields(cls):
+        if cls.id_fields is not None:
+            return ', '.join(cls.id_fields[0:-1]) + ' or ' + cls.id_fields[-1]
+
+
+class MongoCollectionShowOne(CollectionBase, ShowOne):
 
     def take_action(self, parsed_args):
 
@@ -28,17 +38,13 @@ class MongoCollectionShowOne(ShowOne):
                                mongo_username=self.app_args.mongo_username,
                                mongo_password=self.app_args.mongo_password,
                                mongo_database=self.app_args.mongo_database,
-                               fields=self.displayfields,
+                               fields=self.display_fields,
                                verbose=verbosity
                                )
         return ((), ())
 
 
-class MongoCollectionLister(Lister):
-    log = logging.getLogger(__name__)
-    log.debug('Initializing MongoCollectionLister')
-    api = None
-    displayfields = None
+class MongoCollectionLister(CollectionBase, Lister):
 
     def take_action(self, parsed_args):
         self.log.debug(
@@ -57,7 +63,7 @@ class MongoCollectionLister(Lister):
                                mongo_username=self.app_args.mongo_username,
                                mongo_password=self.app_args.mongo_password,
                                mongo_database=self.app_args.mongo_database,
-                               fields=self.displayfields,
+                               fields=self.display_fields,
                                verbose=verbosity
                                )
 
@@ -65,15 +71,11 @@ class MongoCollectionLister(Lister):
 class CollectionList(MongoCollectionLister, ExtLister):
     """List members of a specific MongoDB collection
     """
-    collection = None
-    pagesize = settings.PAGESIZE
-    log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
         parser = super(CollectionList, self).get_parser(prog_name)
 
         parser.add_argument(
-            '-l,'
             '--limit',
             dest='limit',
             type=int,
@@ -81,7 +83,6 @@ class CollectionList(MongoCollectionLister, ExtLister):
         )
 
         parser.add_argument(
-            '-k',
             '--skip',
             dest='skip',
             type=int,
@@ -89,7 +90,6 @@ class CollectionList(MongoCollectionLister, ExtLister):
         )
 
         parser.add_argument(
-            '-p',
             '--page',
             dest='page',
             type=int,
@@ -124,18 +124,15 @@ class CollectionMember(MongoCollectionShowOne, ExtShowOne):
     """
     Get a specific record from a MongoDB collection
     """
-    collection = None
-    pagesize = settings.PAGESIZE
-    log = logging.getLogger(__name__)
-    identifier_name = '{} identifier'.format(collection)
 
     def get_parser(self, prog_name):
+        id_display_name = '{} {}'.format(
+            self.collection_name, self.humanized_id_fields())
         parser = super(CollectionMember, self).get_parser(prog_name)
         parser.add_argument(
             'identifier',
             type=str,
-            metavar='IDENTIFIER',
-            help=self.identifier_name
+            help=id_display_name
         )
         return parser
 
@@ -155,16 +152,12 @@ class CollectionMemberFieldList(MongoCollectionLister):
     """
     Get list values from a subfield of specific MongoDb record
     """
-    collection = None
-    pagesize = settings.PAGESIZE
-    log = logging.getLogger(__name__)
-    identifier_name = '{} identifier'.format(collection)
 
     def get_parser(self, prog_name):
         parser = super(CollectionMemberFieldList, self).get_parser(prog_name)
         parser.add_argument(
             'identifier',
             type=str,
-            help=self.identifier_name
+            help=self.id_display_name
         )
         return parser

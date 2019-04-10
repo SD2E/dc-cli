@@ -4,7 +4,9 @@ from .collections import CollectionList, CollectionMember
 
 class Sample:
     collection = 'sample'
-    displayfields = ['uuid', 'lab_sample_id']
+    collection_name = 'Sample'
+    display_fields = ['uuid', 'lab_sample_id']
+    id_fields = ['uuid', 'sample_id']
 
 
 class SampleList(Sample, CollectionList):

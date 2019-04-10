@@ -22,49 +22,54 @@ class JobSendEvent(JobShow, CollectionMember):
         parser.set_defaults(identifier=None)
         parser.add_argument(
             'event_name',
+            choices=PipelineJobEvent.event_names(),
             nargs='?',
-            help='Pipeline Job event name'
+            help='Event name'
         )
         parser.add_argument(
             '--data',
+            metavar='{data}',
             help='Event payload (JSON)'
         )
         parser.add_argument(
-            '--async',
-            dest='sync',
-            action='store_false',
-            default=True,
-            help='Do not wait for event response'
+            '-F',
+            dest='file',
+            type=argparse.FileType('r'),
+            help='Load event definition from file'
         )
         parser.add_argument(
             '--manager',
             dest='manager',
+            metavar='<actorId>',
             default=self.actor_id,
             help='Jobs Manager actorId or actorAlias'
         )
         parser.add_argument(
             '--nonce',
             dest='nonce',
+            metavar='<actorNonce>',
             default=self.authz_nonce,
             help='Jobs Manager authorization nonce'
         )
         parser.add_argument(
             '--token',
             dest='token',
+            metavar='<authzToken>',
             help='Admin token'
         )
         parser.add_argument(
             '--key',
-            metavar='<admin-key>',
+            metavar='<adminKey>',
             dest='key',
             default=settings.ADMIN_TOKEN_KEY,
             help='Key for generating an admin token'
         )
         parser.add_argument(
-            '-F', '--file',
-            dest='file',
-            type=argparse.FileType('r'),
-            help='Load event definition from file'
+            '--async',
+            dest='sync',
+            action='store_false',
+            default=True,
+            help='Send event then exit'
         )
         return parser
 

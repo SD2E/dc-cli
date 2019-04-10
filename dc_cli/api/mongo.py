@@ -44,23 +44,28 @@ class DatabaseAPI(object):
 
         self.verbosity = verbose
         self.flatten = flatten
-        self.displayfields = fields
+        self.display_fields = fields
         self.db = Manager(mongodb)
         self.log.debug('(Initialized)')
+
+    def get_identifiers(self, name):
+        """Retrieve fields that are identifiers in a collection
+        """
+        return self.db.stores[name].get_indexes()
 
     def get_fieldnames(self, name, filter=[], humanize=False):
         """Dynamically get field names for display in CLI
 
         The function either inspects the schema for a given collection
         and makes an informed guess on which elements are amenable to
-        display or relies on values provided in self.displayfields
+        display or relies on values provided in self.display_fields
         """
         fieldnames = None
         if self.verbosity == Verbosity.ALL:
             fieldnames = self.db.stores[name].get_fields()
         elif self.verbosity == Verbosity.INDEXED:
-            if self.displayfields is not None:
-                fieldnames = self.displayfields
+            if self.display_fields is not None:
+                fieldnames = self.display_fields
             else:
                 fieldnames = self.db.stores[name].get_indexes()
         else:

@@ -9,7 +9,8 @@ from . import settings
 
 class File:
     collection = 'file'
-    identifier_name = 'uuid, file_id, or name'
+    collection_name = 'File'
+    id_fields = ['uuid', 'file_id', 'name']
 
 
 class FileList(File, CollectionList):
@@ -35,19 +36,19 @@ class FileGet(File, MongoCollectionShowOne):
     log.debug('Init FileGet')
 
     def get_parser(self, prog_name):
+        id_display_name = '{} {}'.format(
+            self.collection_name, self.humanized_id_fields())
         parser = super(MongoCollectionShowOne, self).get_parser(prog_name)
-
         parser.add_argument(
             'identifier',
             type=str,
-            help=self.identifier_name
+            help=id_display_name
         )
         parser.add_argument(
             '-O',
-            '--output',
             dest='output',
             default=None,
-            help='Destination file path'
+            help='Destination filename'
         )
         return parser
 
@@ -63,7 +64,7 @@ class FileGet(File, MongoCollectionShowOne):
                           mongo_username=self.app_args.mongo_username,
                           mongo_password=self.app_args.mongo_password,
                           mongo_database=self.app_args.mongo_database,
-                          fields=self.displayfields,
+                          fields=self.display_fields,
                           verbose=verbosity)
 
         # Note we do not currently permit the custom field set

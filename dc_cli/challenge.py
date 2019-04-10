@@ -4,8 +4,9 @@ from .collections import CollectionList, CollectionMember
 
 class Challenge:
     collection = 'challenge_problem'
-    displayfields = ['uuid', 'id', 'title', 'status', 'updated']
-    identifier_name = 'uuid or id'
+    collection_name = 'Challenge Problem'
+    display_fields = ['uuid', 'id', 'title', 'status', 'updated']
+    id_fields = ['uuid', 'id']
 
 
 class ChallengeList(Challenge, CollectionList):

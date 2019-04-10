@@ -5,21 +5,21 @@ from datacatalog.tokens import get_admin_token, get_admin_lifetime
 from . import settings
 
 
-class TokenShow(ShowOne):
+class TokenGenerate(ShowOne):
     """
-    Return current administrative token
+    Generate an administrative token for managing Data Catalog records
     """
 
     log = logging.getLogger(__name__)
 
     def get_parser(self, prog_name):
-        parser = super(TokenShow, self).get_parser(prog_name)
+        parser = super(TokenGenerate, self).get_parser(prog_name)
         parser.add_argument(
             '--key',
-            metavar='<admin-key>',
+            metavar='<adminKey>',
             dest='key',
             default=settings.ADMIN_TOKEN_KEY,
-            help='Admin token key'
+            help='Key for generating an admin token'
         )
         return parser
 

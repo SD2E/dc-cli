@@ -7,8 +7,9 @@ from .pipeline import PipelineRecord
 
 class Job:
     collection = 'pipelinejob'
-    displayfields = ['uuid', 'state', 'updated']
-    identifier_name = 'Pipeline Job UUID'
+    collection_name = 'Pipeline Job'
+    display_fields = ['uuid', 'state', 'updated']
+    id_fields = ['uuid']
 
     def _lookup_pipeline(self, pipeline_uuid):
         resp = self.api.get_collection_member_by_identifier(
