@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* Change experiment-design command to simply design as the dash and long name are user-hostile
+* Renamed commands operating on collections to their singular form to reduce user confusion and reduce the number of distinct commands in dcat. Rename <Collection>Get classes to <CollectionShow> classes as we have plans for <Collection>Get
+* Clean up temp outputs
+* Adding docs. Refactor the way that help text for <identifier> is built to customize based on Collection that is being operated upon
 * Minor fixes to get settings working. Improvements to various option metavariables to improve clarity when running --help
 * Refcator to use a settings module hybridized w the utils.env module from atmo-cli
 * Implemented job event management

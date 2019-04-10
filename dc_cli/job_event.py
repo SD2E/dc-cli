@@ -38,14 +38,14 @@ class JobEventSend(JobShow, CollectionMember):
             help='Load event definition from file'
         )
         parser.add_argument(
-            '--manager',
+            '--job-manager',
             dest='manager',
             metavar='<actorId>',
             default=self.actor_id,
             help='Jobs Manager actorId or actorAlias'
         )
         parser.add_argument(
-            '--nonce',
+            '--job-manager-nonce',
             dest='nonce',
             metavar='<actorNonce>',
             default=self.authz_nonce,
