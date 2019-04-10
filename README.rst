@@ -16,11 +16,14 @@ Getting Started
 ---------------
 
 The Data Catalog CLI cannot currently be installed from PyPI. The preferred installation
-path while it is in active development is to install from GitHub source.
+path while it is in active development is to install from GitHub source. Because of
+reliance on Python modules that are not yet in PyPi, it is recommended to use the
+(relatively) new ``pipenv`` Python packaging manager to install ``dc-cli``.
 
 .. code-block:: shell
 
-    $ pip install --upgrade git+https://github.com/SD2E/dc-cli.git
+    $ pip install pipenv
+    $ pipenv install "git+https://github.com/SD2E/dc-cli.git@master"
 
 There are a few ways to get help. A listing of supported commands and global options can be shown with ``--help``:
 

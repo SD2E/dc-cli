@@ -5,3 +5,5 @@ python-dotenv
 requests
 six
 agavepy
+git+https://github.com/SD2E/python-datacatalog.git@2_0#egg=datacatalog
+git+https://github.com/SD2E/bacanora.git#egg=bacanora
