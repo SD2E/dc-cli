@@ -7,3 +7,4 @@ dc_cli.egg-info/*
 *__pycache__*
 docs/_build
 *.pyc
+src

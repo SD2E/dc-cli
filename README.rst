@@ -12,8 +12,8 @@ service.
 - `Documentation <https://dc-cli.readthedocs.io/en/latest/>`_
 - `Bugs/Issues <https://github.com/SD2E/dc-cli/issues>`_
 
-Getting Started
----------------
+Installation
+------------
 
 The Data Catalog CLI cannot currently be installed from PyPI. The preferred installation
 path while it is in active development is to install from GitHub source. Because of
@@ -23,9 +23,16 @@ reliance on Python modules that are not yet in PyPi, it is recommended to use th
 .. code-block:: shell
 
     $ pip install pipenv
-    $ pipenv install "git+https://github.com/SD2E/dc-cli.git@master"
+    $ pipenv install "git+https://github.com/SD2E/dc-cli.git@master#egg=dc_cli"
 
-There are a few ways to get help. A listing of supported commands and global options can be shown with ``--help``:
+More extensive installation instructions [are also available]([INSTALL.rst).
+
+Getting Started
+---------------
+
+The CLI features extensive contextual help, which should help you learn to use
+it. For instance, a listing of supported commands and global options can be \
+shown with ``--help``:
 
 .. code-block:: shell
 
@@ -36,8 +43,10 @@ There is also a ``help`` command that can be used to get help for specific comma
 .. code-block:: shell
 
     $ dcat help challenges list
+    $ dcat challenges list --help
 
-(Optional) Install bash command line completion to get command hints by tabbing:
+(Optional) You can install bash command line completion to get command hints
+by tabbing.
 
 .. code-block:: shell
 

@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Updated reqs. Added Dockerfile
 * WIP on using pipenv. Not installing the 'dcat' shell command
 * Use pipenv to manage installation
 * Authored README.rst and .env.sample file
