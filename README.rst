@@ -48,6 +48,11 @@ There is also a ``help`` command that can be used to get help for specific comma
     complete     file         job          sample
     design       help         measurement  token
 
+.. note::
+
+    **Mac OS X Users**: You may need to install autocomplete support before
+    this works. We recommend using Homebrew: ``brew install bash-completion``.
+
 Configuration
 -------------
 

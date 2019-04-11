@@ -1,6 +1,8 @@
 CHANGES
 =======
 
+* WIP on using pipenv. Not installing the 'dcat' shell command
+* Use pipenv to manage installation
 * Authored README.rst and .env.sample file
 * Change experiment-design command to simply design as the dash and long name are user-hostile
 * Renamed commands operating on collections to their singular form to reduce user confusion and reduce the number of distinct commands in dcat. Rename <Collection>Get classes to <CollectionShow> classes as we have plans for <Collection>Get
