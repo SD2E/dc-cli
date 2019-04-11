@@ -25,7 +25,7 @@ reliance on Python modules that are not yet in PyPi, it is recommended to use th
     $ pip install pipenv
     $ pipenv install "git+https://github.com/SD2E/dc-cli.git@master#egg=dc_cli"
 
-More extensive installation instructions [are also available]([INSTALL.rst).
+More extensive installation documentation `is available <./INSTALL.rst>`_.
 
 Getting Started
 ---------------
