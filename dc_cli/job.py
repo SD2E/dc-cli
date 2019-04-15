@@ -1,6 +1,6 @@
 import logging
 from .collections import (
-    CollectionList, CollectionMember, CollectionMemberFieldList)
+    CollectionList, CollectionMember, CollectionMemberFieldList, searchmods)
 from .api import DataCatalogRecord
 from .pipeline import PipelineRecord
 
@@ -10,6 +10,9 @@ class Job:
     collection_name = 'Pipeline Job'
     display_fields = ['uuid', 'state', 'updated']
     id_fields = ['uuid']
+    lst_defs = [('state', 'state', searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.IN, searchmods.NOT_IN])]
 
     def _lookup_pipeline(self, pipeline_uuid):
         resp = self.api.get_collection_member_by_identifier(

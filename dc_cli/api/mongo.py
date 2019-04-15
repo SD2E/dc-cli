@@ -87,6 +87,7 @@ class DatabaseAPI(object):
                          skip=None, raw=False):
         """Run a MongoDB query in JSON format against a specific named collection
         """
+        self.log.debug('Filter: {}'.format(filter))
         fields = self.get_fieldnames(name)
         proj = ordered_projection(fields)
         extras = dict()

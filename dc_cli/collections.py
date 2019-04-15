@@ -4,6 +4,7 @@ from cliff.show import ShowOne
 from cliff.lister import Lister
 from dc_cli.api import DatabaseAPI, Verbosity
 from .extended import ExtLister, ExtShowOne
+from .search import SearchArg, searchmods
 from . import settings
 
 
@@ -15,6 +16,8 @@ class CollectionBase:
     display_fields = None
     id_fields = None
     pagesize = settings.PAGESIZE
+    lst_defs = list()
+    search_args = dict()
 
     @classmethod
     def humanized_id_fields(cls):
@@ -97,6 +100,15 @@ class CollectionList(MongoCollectionLister, ExtLister):
             help="Return page [p] of {} records".format(self.pagesize)
         )
 
+        # These are custom filter arguments
+        for arg, field, def_mod, mods in self.lst_defs:
+            sarg = SearchArg(argument=arg, field=field,
+                             default_mod=def_mod, mods=mods)
+            sargp = sarg.argparse()
+            self.search_args[arg] = sarg
+            parser.add_argument(sargp.argument,
+                                **sargp.attributes)
+
         return parser
 
     def take_action(self, parsed_args):
@@ -110,14 +122,28 @@ class CollectionList(MongoCollectionLister, ExtLister):
             limit = parsed_args.limit
             skip = parsed_args.skip
 
+        # Build up filters
+        filters = list()
+        for sa, sv in self.search_args.items():
+            if getattr(parsed_args, sa):
+                arg_qval = sv.get_query(getattr(parsed_args, sa))
+                filters.append(arg_qval)
+        if len(filters) > 0:
+            filt = {'$and': filters}
+        else:
+            # Allow for no filters (duh!)
+            filt = {}
+
         headers = self.api.get_fieldnames(
             self.collection, humanize=parsed_args.humanize)
         data = self.api.query_collection(
-            self.collection, limit=limit, skip=skip)
+            self.collection, filter=filt, limit=limit, skip=skip)
         collection_members = []
         for record in data:
             collection_members.append(record)
 
+        self.log.info('CollectionList.take_action complete: {}'.format(
+            len(collection_members)))
         return (headers, tuple(collection_members))
 
 

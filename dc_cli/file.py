@@ -3,7 +3,7 @@ import logging
 from cliff.show import ShowOne
 from .api import DatabaseAPI, Verbosity, AgaveAPI, AgaveError
 from .collections import (MongoCollectionShowOne,
-                          CollectionList, CollectionMember)
+                          CollectionList, CollectionMember, searchmods)
 from . import settings
 
 
@@ -11,6 +11,21 @@ class File:
     collection = 'file'
     collection_name = 'File'
     id_fields = ['uuid', 'file_id', 'name']
+    # arg, field, def_mod, mods
+    lst_defs = [('name', 'name', searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.STARTS_WITH, searchmods.ENDS_WITH,
+                  searchmods.LIKE, searchmods.NOT_LIKE]),
+                ('level', 'level', searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.IN, searchmods.NOT_IN]),
+                ('type', 'type', searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.IN, searchmods.NOT_IN]),
+                ('file_id', 'file_id', searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.IN, searchmods.NOT_IN,
+                  searchmods.LIKE, searchmods.NOT_LIKE])]
 
 
 class FileList(File, CollectionList):

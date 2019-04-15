@@ -1,5 +1,5 @@
 import logging
-from .collections import CollectionList, CollectionMember
+from .collections import (CollectionList, CollectionMember, searchmods)
 
 
 class Experiment:
@@ -8,6 +8,15 @@ class Experiment:
     # identifier_name = 'uuid or experiment_id'
     collection_name = 'Experiment'
     id_fields = ['uuid', 'experiment_id']
+    lst_defs = [
+        ('id', 'experiment_id', searchmods.LIKE,
+         [searchmods.EQUALS, searchmods.NOT_EQUAL,
+          searchmods.IN, searchmods.NOT_IN,
+          searchmods.LIKE, searchmods.NOT_LIKE]),
+        ('title', 'title', searchmods.LIKE,
+         [searchmods.EQUALS, searchmods.NOT_EQUAL,
+          searchmods.LIKE, searchmods.NOT_LIKE,
+          searchmods.IN, searchmods.NOT_IN])]
 
 
 class ExperimentList(Experiment, CollectionList):
