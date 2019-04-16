@@ -1,5 +1,6 @@
 import logging
-from .collections import (CollectionList, CollectionMember, searchmods)
+from .collections import (
+    CollectionList, CollectionMember, searchmods, searchtypes)
 
 
 class Measurement:
@@ -9,19 +10,28 @@ class Measurement:
         'uuid', 'measurement_id', 'measurement_name', 'measurement_type']
     id_fields = ['uuid', 'measurement_id']
     lst_defs = [
-        ('id', 'measurement_id', searchmods.LIKE,
+        ('id', 'measurement_id', searchtypes.STRING,
+         searchmods.LIKE,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.IN, searchmods.NOT_IN,
           searchmods.LIKE, searchmods.NOT_LIKE]),
-        ('type', 'measurement_type', searchmods.EQUALS,
+        ('type', 'measurement_type', searchtypes.STRING,
+         searchmods.EQUALS,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.IN, searchmods.NOT_IN,
           searchmods.LIKE, searchmods.NOT_LIKE]),
-        ('name', 'measurement_name', searchmods.LIKE,
+        ('name', 'measurement_name', searchtypes.STRING,
+         searchmods.LIKE,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.LIKE, searchmods.NOT_LIKE,
           searchmods.IN, searchmods.NOT_IN]),
-        ('group_id', 'measurement_group_id', searchmods.EQUALS,
+        ('group_id', 'measurement_group_id', searchtypes.STRING,
+         searchmods.EQUALS,
+         [searchmods.EQUALS, searchmods.NOT_EQUAL,
+          searchmods.LIKE, searchmods.NOT_LIKE,
+          searchmods.IN, searchmods.NOT_IN]),
+        ('timepoint', 'timepoint.value', searchtypes.FLOAT,
+         searchmods.EQUALS,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.LIKE, searchmods.NOT_LIKE,
           searchmods.IN, searchmods.NOT_IN])]

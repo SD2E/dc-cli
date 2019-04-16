@@ -1,5 +1,6 @@
 import logging
-from .collections import (CollectionList, CollectionMember, searchmods)
+from .collections import (
+    CollectionList, CollectionMember, searchmods, searchtypes)
 
 
 class Sample:
@@ -8,19 +9,23 @@ class Sample:
     display_fields = ['uuid', 'lab_sample_id']
     id_fields = ['uuid', 'sample_id']
     lst_defs = [
-        ('id', 'sample_id', searchmods.LIKE,
+        ('id', 'sample_id', searchtypes.STRING,
+         searchmods.LIKE,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.IN, searchmods.NOT_IN,
           searchmods.LIKE, searchmods.NOT_LIKE]),
-        ('labid', 'lab_sample_id', searchmods.LIKE,
+        ('labid', 'lab_sample_id', searchtypes.STRING,
+         searchmods.LIKE,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.IN, searchmods.NOT_IN,
           searchmods.LIKE, searchmods.NOT_LIKE]),
-        ('control_type', 'control_type', searchmods.EQUALS,
+        ('control_type', 'control_type', searchtypes.STRING,
+         searchmods.EQUALS,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.LIKE, searchmods.NOT_LIKE,
           searchmods.IN, searchmods.NOT_IN]),
-        ('replicate', 'replicate', searchmods.EQUALS,
+        ('replicate', 'replicate', searchtypes.INTEGER,
+         searchmods.EQUALS,
          [searchmods.EQUALS, searchmods.NOT_EQUAL,
           searchmods.LIKE, searchmods.NOT_LIKE,
           searchmods.IN, searchmods.NOT_IN])]

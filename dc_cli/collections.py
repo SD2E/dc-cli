@@ -4,7 +4,7 @@ from cliff.show import ShowOne
 from cliff.lister import Lister
 from dc_cli.api import DatabaseAPI, Verbosity
 from .extended import ExtLister, ExtShowOne
-from .search import SearchArg, searchmods
+from .search import (SearchArg, searchmods, searchtypes)
 from . import settings
 
 
@@ -101,9 +101,11 @@ class CollectionList(MongoCollectionLister, ExtLister):
         )
 
         # These are custom filter arguments
-        for arg, field, def_mod, mods in self.lst_defs:
+        # TODO Add `type`
+        for arg, field, field_type, def_mod, mods in self.lst_defs:
             sarg = SearchArg(argument=arg, field=field,
-                             default_mod=def_mod, mods=mods)
+                             default_mod=def_mod, mods=mods,
+                             field_type=field_type)
             sargp = sarg.argparse()
             self.search_args[arg] = sarg
             parser.add_argument(sargp.argument,

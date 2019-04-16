@@ -1,8 +1,13 @@
+import arrow
+import dateparser
+from datetime import datetime
 from attrdict import AttrDict
 from bson.regex import Regex
 from collections import namedtuple
-from . import searchmods
+from . import searchmods, searchtypes
 
+BOOLEAN_TRUE_STRINGS = ('true', 'on', 'ok', 'y', 'yes', '1')
+DATETIME = 'datetime'
 
 Argument = namedtuple('Argument', 'argument, attributes')
 
@@ -11,27 +16,55 @@ class MongoQuery(dict):
     pass
 
 
+class ArrowSpan(arrow.Arrow):
+    """Subclass of Arrow with upgraded span() capability used to
+    generate MongoDB date ranges for queries
+    """
+    YEAR = 'year'
+    MONTH = 'month'
+    WEEK = 'week'
+    DAY = 'day'
+    HOUR = 'hour'
+    MINUTE = 'minute'
+    SPANS = [YEAR, MONTH, WEEK, DAY, HOUR, MINUTE]
+    default_span = DAY
+    original_value = None
+
+    def setup(self, value):
+        setattr(self, 'original_value', value)
+        return self
+
+    def smart_span(self, span_value=None):
+        orig = getattr(self, 'original_value', '').lower()
+        span = self.default_span
+        if span_value is None:
+            # Iterate thru last X, this X, next X, etc
+            for s in [self.YEAR, self.MONTH, self.WEEK, self.DAY]:
+                if s in orig:
+                    span = s
+                    break
+        # We are able to call Arrow's span() since this is a subclass
+        return self.span(span)
+
+
 class SearchArg(object):
     """Encapsulates argparse formatting and translation to MongoDB queries
     """
     PARAMS = [
-        ('argument', True, 'argument', str, None),
-        ('field', False, 'field', str, None),
+        ('argument', True, 'argument', 'str', None),
+        ('field', False, 'field', 'str', None),
         ('choices', False, 'choices', None, None),
-        ('mods', False, 'mods', list, [searchmods.EQUALS]),
-        ('default_mod', False, 'default_mod', str, searchmods.EQUALS)]
+        ('mods', False, 'mods', 'list', [searchmods.EQUALS]),
+        ('default_mod', False, 'default_mod', 'str', searchmods.EQUALS)]
 
-    def __init__(self, **kwargs):
+    def __init__(self, field_type=searchtypes.STRING, **kwargs):
+        setattr(self, 'field_type', field_type)
         for param, required, attr, typ, default in self.PARAMS:
             val = kwargs.get(param, default)
             if required:
                 if param not in kwargs:
                     raise ValueError(
                         'Parameter "{}" is required'.format(param))
-                if typ is not None:
-                    assert isinstance(
-                        val, typ), '{}.{} must be type "{}"'.format(
-                            param, val, typ)
             setattr(self, attr, val)
 
         if self.field is None:
@@ -48,21 +81,55 @@ class SearchArg(object):
         return Argument('--' + self.argument, params)
 
     def get_query(self, values):
-        """Generate a PyMongo query for an argument and its value
+        """Generate a PyMongo query for an argument and its value(s)
         """
         modifier = None
-        # first element is assumed to be the search modifier
+        # Base assumption: first element is search modifier. Otherwise, use
+        # default, allowing for --flag <value> behavior
         if len(values) == 2:
             modifier = values[0]
             values.remove(values[0])
         elif modifier is None:
             modifier = self.default_mod
+        # Now, type-cast values as per SearchArg.field_type
+        casted_values = [self.cast(v) for v in values]
         if modifier in self.mods:
             fn = getattr(self, 'query_' + modifier)
-            return fn(values)
+            return fn(casted_values)
         else:
             raise ValueError('"{}" is not a valid modifier for "{}"'.format(
                 modifier, self.argument))
+
+    def cast(self, value, field_type=None):
+        """Cast a value into a defined Python type
+        """
+        if field_type is None:
+            field_type = self.field_type
+        if value:
+            # human-provided date string => Python datetime(s)
+            if field_type is DATETIME:
+                value = self.parse_datetime(value)
+                return value
+            # human-provided boolean => Python bool
+            elif field_type is bool:
+                value = value.lower() in BOOLEAN_TRUE_STRINGS
+                return value
+            # Fall back to generic Python casting behavior
+            try:
+                return field_type(value)
+            except ValueError:
+                raise Exception(
+                    'Unable to cast {} to {}'.format(value, field_type))
+
+    @classmethod
+    def parse_datetime(cls, value, span=None):
+        """Transform a human date or time string to a Python UTC datetime
+        """
+        factory = arrow.ArrowFactory(ArrowSpan)
+        dta = factory.get(dateparser.parse(
+            value, settings={'TIMEZONE': 'UTC'}))
+        dta.setup(value)
+        return dta
 
     def to_values(self, value, delim=','):
         """Transform a value into a list of values
@@ -77,6 +144,8 @@ class SearchArg(object):
         elif isinstance(value, str):
             qvals = value.split(delim)
             qvals = [q.strip() for q in qvals]
+
+        qvals = [self.cast(q) for q in qvals]
         return qvals
 
     def query_eq(self, value):

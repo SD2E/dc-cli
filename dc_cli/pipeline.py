@@ -1,5 +1,6 @@
 import logging
-from .collections import (CollectionList, CollectionMember, searchmods)
+from .collections import (
+    CollectionList, CollectionMember, searchmods, searchtypes)
 from collections import namedtuple
 
 PipelineRecord = namedtuple('Pipeline', 'uuid name id')
@@ -10,11 +11,13 @@ class Pipeline:
     collection_name = 'Pipeline'
     display_fields = ['uuid', 'name', 'description']
     id_fields = ['uuid']
-    lst_defs = [('name', 'name', searchmods.EQUALS,
+    lst_defs = [('name', 'name', searchtypes.STRING,
+                 searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.STARTS_WITH, searchmods.ENDS_WITH,
                   searchmods.LIKE, searchmods.NOT_LIKE]),
-                ('description', 'description', searchmods.LIKE,
+                ('description', 'description', searchtypes.STRING,
+                 searchmods.LIKE,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN])]
 

@@ -1,6 +1,7 @@
 import logging
 from .collections import (
-    CollectionList, CollectionMember, CollectionMemberFieldList, searchmods)
+    CollectionList, CollectionMember, CollectionMemberFieldList,
+    searchmods, searchtypes)
 from .api import DataCatalogRecord
 from .pipeline import PipelineRecord
 
@@ -10,7 +11,8 @@ class Job:
     collection_name = 'Pipeline Job'
     display_fields = ['uuid', 'state', 'updated']
     id_fields = ['uuid']
-    lst_defs = [('state', 'state', searchmods.EQUALS,
+    lst_defs = [('state', 'state', searchtypes.STRING,
+                 searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN])]
 
@@ -25,6 +27,8 @@ class JobList(Job, CollectionList):
     List pipeline jobs
     """
     log = logging.getLogger(__name__)
+
+    # TODO - the inelegance has come back to bite me as the 2x database query breaks filtering
 
     # This is a hacky way to amend a job record with its parent
     # pipeline.name. A better solution would rely on a server-side jobs view
