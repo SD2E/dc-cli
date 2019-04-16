@@ -188,23 +188,44 @@ class SearchArg(object):
         # NOT_EQUAL
         if isinstance(value, list):
             value = value[0]
-        return MongoQuery({self.field: {'$ne': value}})
+        if self.field_type is searchtypes.DATETIME:
+            return MongoQuery({self.field: {'$not': {
+                '$gte': value.smart_floor(),
+                '$lt': value.smart_ceil()}}})
+        else:
+            return MongoQuery({self.field: {'$ne': value}})
 
     def query_gt(self, value):
         # GREATER_THAN
-        pass
+        if isinstance(value, list):
+            value = value[0]
+        if self.field_type is searchtypes.DATETIME:
+            value = value.datetime
+        return MongoQuery({self.field: {'$gt': value}})
 
     def query_gte(self, value):
         # GREATER_THAN_OR_EQUAL
-        pass
+        if isinstance(value, list):
+            value = value[0]
+        if self.field_type is searchtypes.DATETIME:
+            value = value.datetime
+        return MongoQuery({self.field: {'$gte': value}})
 
     def query_lt(self, value):
         # LESS_THAN
-        pass
+        if isinstance(value, list):
+            value = value[0]
+        if self.field_type is searchtypes.DATETIME:
+            value = value.datetime
+        return MongoQuery({self.field: {'$lt': value}})
 
     def query_lte(self, value):
         # LESS_THAN_OR_EQUAL
-        pass
+        if isinstance(value, list):
+            value = value[0]
+        if self.field_type is searchtypes.DATETIME:
+            value = value.datetime
+        return MongoQuery({self.field: {'$lte': value}})
 
     def query_in(self, values):
         # IN (array)
@@ -258,3 +279,18 @@ class SearchArg(object):
             value = value[0]
         return MongoQuery({self.field: {'$not': Regex(
             '.*' + value + '.*', 'i')}})
+
+    def query_on(self, value):
+        if self.field_type is not searchtypes.DATETIME:
+            raise TypeError('"on" may only be used for dates and times')
+        return self.query_eq(value)
+
+    def query_after(self, value):
+        if self.field_type is not searchtypes.DATETIME:
+            raise TypeError('"after" may only be used for dates and times')
+        return self.query_gt(value)
+
+    def query_before(self, value):
+        if self.field_type is not searchtypes.DATETIME:
+            raise TypeError('"before" may only be used for dates and times')
+        return self.query_lt(value)
