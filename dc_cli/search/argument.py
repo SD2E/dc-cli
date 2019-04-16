@@ -46,6 +46,30 @@ class ArrowSpan(arrow.Arrow):
         # We are able to call Arrow's span() since this is a subclass
         return self.span(span)
 
+    def smart_floor(self, span_value=None):
+        orig = getattr(self, 'original_value', '').lower()
+        span = self.default_span
+        if span_value is None:
+            # Iterate thru last X, this X, next X, etc
+            for s in [self.YEAR, self.MONTH, self.WEEK, self.DAY]:
+                if s in orig:
+                    span = s
+                    break
+        # We are able to call Arrow's floor() since this is a subclass
+        return self.floor(span).datetime
+
+    def smart_ceil(self, span_value=None):
+        orig = getattr(self, 'original_value', '').lower()
+        span = self.default_span
+        if span_value is None:
+            # Iterate thru last X, this X, next X, etc
+            for s in [self.YEAR, self.MONTH, self.WEEK, self.DAY]:
+                if s in orig:
+                    span = s
+                    break
+        # We are able to call Arrow's ceil()) since this is a subclass
+        return self.ceil(span).datetime
+
 
 class SearchArg(object):
     """Encapsulates argparse formatting and translation to MongoDB queries
@@ -108,7 +132,9 @@ class SearchArg(object):
         if value:
             # human-provided date string => Python datetime(s)
             if field_type is DATETIME:
+                # orig_val = value
                 value = self.parse_datetime(value)
+                # value.setup(orig_val)
                 return value
             # human-provided boolean => Python bool
             elif field_type is bool:
@@ -152,7 +178,11 @@ class SearchArg(object):
         # EQUALS
         if isinstance(value, list):
             value = value[0]
-        return MongoQuery({self.field: value})
+        if self.field_type is searchtypes.DATETIME:
+            return MongoQuery({self.field: {'$gte': value.smart_floor(),
+                                            '$lt': value.smart_ceil()}})
+        else:
+            return MongoQuery({self.field: value})
 
     def query_neq(self, value):
         # NOT_EQUAL

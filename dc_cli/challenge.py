@@ -21,7 +21,17 @@ class Challenge:
                  searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN,
-                  searchmods.LIKE, searchmods.NOT_LIKE])]
+                  searchmods.LIKE, searchmods.NOT_LIKE]),
+                ('created', 'created', searchtypes.DATETIME,
+                 searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.GREATER_THAN, searchmods.GREATER_THAN_EQUAL,
+                  searchmods.LESS_THAN, searchmods.LESS_THAN_EQUAL]),
+                ('updated', 'updated', searchtypes.DATETIME,
+                 searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.GREATER_THAN, searchmods.GREATER_THAN_EQUAL,
+                  searchmods.LESS_THAN, searchmods.LESS_THAN_EQUAL])]
 
 
 class ChallengeList(Challenge, CollectionList):

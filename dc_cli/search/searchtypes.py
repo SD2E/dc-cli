@@ -3,6 +3,6 @@ INTEGER = int
 FLOAT = float
 DOUBLE = FLOAT
 NUMBER = FLOAT
-DATE = 'datetime'
+DATETIME = 'datetime'
 BOOLEAN = bool
 NONE = None
