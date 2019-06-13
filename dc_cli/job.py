@@ -14,7 +14,19 @@ class Job:
     lst_defs = [('state', 'state', searchtypes.STRING,
                  searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
-                  searchmods.IN, searchmods.NOT_IN])]
+                  searchmods.IN, searchmods.NOT_IN]),
+                ('created', 'created', searchtypes.DATETIME,
+                 searchmods.ON,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.GREATER_THAN, searchmods.GREATER_THAN_EQUAL,
+                  searchmods.LESS_THAN, searchmods.LESS_THAN_EQUAL,
+                  searchmods.ON, searchmods.AFTER, searchmods.BEFORE]),
+                ('updated', 'updated', searchtypes.DATETIME,
+                 searchmods.ON,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.GREATER_THAN, searchmods.GREATER_THAN_EQUAL,
+                  searchmods.LESS_THAN, searchmods.LESS_THAN_EQUAL,
+                  searchmods.ON, searchmods.AFTER, searchmods.BEFORE])]
 
     def _lookup_pipeline(self, pipeline_uuid):
         resp = self.api.get_collection_member_by_identifier(
@@ -23,6 +35,20 @@ class Job:
 
 
 class JobList(Job, CollectionList):
+    """
+    List/filter jobs
+    """
+    log = logging.getLogger(__name__)
+
+
+class JobShow(Job, CollectionMember):
+    """
+    Show one job
+    """
+    log = logging.getLogger(__name__)
+
+
+class xJobList(Job, CollectionList):
     """
     List pipeline jobs
     """
@@ -61,7 +87,7 @@ class JobList(Job, CollectionList):
         return (headers, tuple(collection_members))
 
 
-class JobShow(Job, CollectionMember):
+class xJobShow(Job, CollectionMember):
     """
     Show one pipeline job
     """

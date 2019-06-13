@@ -82,7 +82,8 @@ class JobEventSend(JobShow, CollectionMember):
         tapis = AbacoAPI(api_server=self.app_args.api_server,
                          access_token=self.app_args.access_token,
                          refresh_token=self.app_args.refresh_token,
-                         nonce=parsed_args.nonce)
+                         nonce=parsed_args.nonce,
+                         sync=False)
 
         # read definition from file
         if parsed_args.file:
@@ -121,10 +122,28 @@ class JobEventSend(JobShow, CollectionMember):
         # Send the message to jobs-manager.prod then wait
         self.log.info('Sending "{}" to {}'.format(
             event['name'], event['uuid']))
-        tapis.send_message(parsed_args.manager, event, sync=parsed_args.sync)
+        # tapis.send_message(parsed_args.manager, event, sync=parsed_args.sync)
+        msg_rsp = tapis.send_message(parsed_args.manager, event)
+
+        # New - fastest possible async response. TODO - make this optional
+        if not msg_rsp:
+            # TODO raise a more appropriate exception type
+            raise ValueError('No executionId or affirmative response was returned')
+        else:
+            if isinstance(msg_rsp, bool):
+                headers = ['result']
+                data = [msp_rsp]
+            elif isinstance(msg_rsp, str):
+                # Todo validate as an abaco executionId
+                headers = ['executionId']
+                data = [msg_rsp]
+        return (tuple(headers), tuple(data))
 
         # Query job and display result
         headers = self.api.get_fieldnames(self.collection)
+
+        # Fetch info about pipeline and inject into job
+        # TODO - Rplace w a view
         if 'pipeline.name' in headers:
             headers.remove('pipeline.name')
         if 'pipeline_uuid' in headers:

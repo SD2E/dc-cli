@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+* Added support for ON, AFTER, BEFORE, GTE, LTE, GT, LT to date filters
+* Date search (for EQUALS) works now
+* Added typecasting and WIP date resolution
+* Added filters to \*list methods with a simple config DSL for argparse
+* Fix link
+* Update gitignore
 * Updated reqs. Added Dockerfile
 * WIP on using pipenv. Not installing the 'dcat' shell command
 * Use pipenv to manage installation
