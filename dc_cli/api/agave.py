@@ -73,7 +73,7 @@ class AbacoAPI(object):
         try:
             if nonce is not None:
                 self.log.debug('Using Abaco authorization nonce')
-                ag = bacanora.agaveutils.AgaveNonceOnly(
+                ag = bacanora.agaveutils.agave.AgaveNonceOnly(
                     api_server=api_server, nonce=nonce)
             elif access_token is not None:
                 self.log.debug('Using supplied Tapis credentials')
