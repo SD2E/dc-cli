@@ -25,6 +25,10 @@ class File:
                 ('file_id', 'file_id', str, searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN,
+                  searchmods.LIKE, searchmods.NOT_LIKE]),
+                ('storage_system', 'storage_system', str, searchmods.EQUALS,
+                 [searchmods.EQUALS, searchmods.NOT_EQUAL,
+                  searchmods.IN, searchmods.NOT_IN,
                   searchmods.LIKE, searchmods.NOT_LIKE])]
 
 
