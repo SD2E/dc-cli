@@ -2,10 +2,13 @@ import logging
 
 from cliff.show import ShowOne
 from cliff.lister import Lister
-from dc_cli.api import DatabaseAPI, Verbosity
-from .extended import ExtLister, ExtShowOne
-from .search import (SearchArg, searchmods, searchtypes)
+from ..api import (DatabaseAPI, Verbosity)
+from ..extended import (ExtLister, ExtShowOne)
+from ..search import (SearchArg, searchmods, searchtypes)
 from . import settings
+
+__all__ = ['MongoCollectionShowOne', 'MongoCollectionLister',
+           'CollectionList', 'CollectionMemberFieldList']
 
 
 class CollectionBase:

@@ -1,5 +1,5 @@
 import logging
-from .collections import (
+from . import (
     CollectionList, CollectionMember, searchmods, searchtypes)
 
 

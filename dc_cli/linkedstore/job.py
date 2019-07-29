@@ -1,8 +1,7 @@
 import logging
-from .collections import (
+from . import (
     CollectionList, CollectionMember, CollectionMemberFieldList,
-    searchmods, searchtypes)
-from .api import DataCatalogRecord
+    DataCatalogRecord, searchmods, searchtypes)
 from .pipeline import PipelineRecord
 
 

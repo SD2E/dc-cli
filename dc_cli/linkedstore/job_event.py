@@ -2,9 +2,9 @@ import argparse
 import json
 import logging
 
-from .api import AbacoAPI, DataCatalogRecord, PipelineJobEvent
-from .job import JobShow, CollectionMember
-from .token import get_token
+from . import (AbacoAPI, CollectionMember, DataCatalogRecord, PipelineJobEvent)
+from .job import JobShow
+from ..token import get_token
 from . import settings
 
 
@@ -128,7 +128,8 @@ class JobEventSend(JobShow, CollectionMember):
         # New - fastest possible async response. TODO - make this optional
         if not msg_rsp:
             # TODO raise a more appropriate exception type
-            raise ValueError('No executionId or affirmative response was returned')
+            raise ValueError(
+                'No executionId or affirmative response was returned')
         else:
             if isinstance(msg_rsp, bool):
                 headers = ['result']

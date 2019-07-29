@@ -2,7 +2,7 @@ import argparse
 from agavepy.agave import AgaveError as TapisError
 from cliff.lister import Lister
 from cliff.show import ShowOne
-from .api.agave import AgaveAPI
+from ..api.agave import AgaveAPI
 
 __all__ = ['TapisShowOne', 'TapisLister', 'TapisError']
 

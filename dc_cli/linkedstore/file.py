@@ -1,16 +1,18 @@
 import bacanora
 import logging
 from cliff.show import ShowOne
-from .api import DatabaseAPI, Verbosity, AgaveAPI, AgaveError
-from .collections import (MongoCollectionShowOne,
-                          CollectionList, CollectionMember, searchmods)
-from . import settings
+from . import (
+    DatabaseAPI, Verbosity, AgaveAPI, CollectionList,
+    CollectionMember, MongoCollectionShowOne, searchmods)
+from .. import settings
 
 
 class File:
     collection = 'file'
     collection_name = 'File'
     id_fields = ['uuid', 'file_id', 'name']
+    display_fields = ['uuid', 'storage_system',
+                      'name', 'type', 'level']
     # arg, field, def_mod, mods
     lst_defs = [('name', 'name', str, searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
@@ -22,7 +24,7 @@ class File:
                 ('type', 'type', str, searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN]),
-                ('file_id', 'file_id', str, searchmods.EQUALS,
+                ('storage_system', 'storage_system', str, searchmods.EQUALS,
                  [searchmods.EQUALS, searchmods.NOT_EQUAL,
                   searchmods.IN, searchmods.NOT_IN,
                   searchmods.LIKE, searchmods.NOT_LIKE])]

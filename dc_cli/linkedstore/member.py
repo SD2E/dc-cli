@@ -1,6 +1,6 @@
 import logging
 from cliff.show import ShowOne
-from dc_cli.api import DatabaseAPI, Verbosity
+from ..api import (DatabaseAPI, Verbosity)
 
 
 class MemberShow(ShowOne):

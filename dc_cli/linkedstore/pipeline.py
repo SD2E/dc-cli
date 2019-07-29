@@ -1,7 +1,7 @@
-import logging
-from .collections import (
-    CollectionList, CollectionMember, searchmods, searchtypes)
 from collections import namedtuple
+import logging
+from . import (
+    CollectionList, CollectionMember, searchmods, searchtypes)
 
 PipelineRecord = namedtuple('Pipeline', 'uuid name id')
 
@@ -9,7 +9,7 @@ PipelineRecord = namedtuple('Pipeline', 'uuid name id')
 class Pipeline:
     collection = 'pipeline'
     collection_name = 'Pipeline'
-    display_fields = ['uuid', 'name', 'description']
+    display_fields = ['uuid', 'name']
     id_fields = ['uuid']
     lst_defs = [('name', 'name', searchtypes.STRING,
                  searchmods.EQUALS,

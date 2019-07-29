@@ -1,6 +1,6 @@
 import logging
-from dc_cli.api import DatabaseAPI, Verbosity
-from .extended import ExtShowOne
+from ..api import DatabaseAPI, Verbosity
+from ..extended import ExtShowOne
 
 
 class IdentifiedRecord:
