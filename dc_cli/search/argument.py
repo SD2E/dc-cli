@@ -1,5 +1,6 @@
 import arrow
 import dateparser
+import inflection
 from datetime import datetime
 from attrdict import AttrDict
 from bson.regex import Regex
@@ -81,8 +82,9 @@ class SearchArg(object):
         ('mods', False, 'mods', 'list', [searchmods.EQUALS]),
         ('default_mod', False, 'default_mod', 'str', searchmods.EQUALS)]
 
-    def __init__(self, field_type=searchtypes.STRING, **kwargs):
+    def __init__(self, field_type=searchtypes.STRING, inflect=True, **kwargs):
         setattr(self, 'field_type', field_type)
+        setattr(self, 'inflection', inflect)
         for param, required, attr, typ, default in self.PARAMS:
             val = kwargs.get(param, default)
             if required:
@@ -93,6 +95,10 @@ class SearchArg(object):
 
         if self.field is None:
             self.field = self.argument
+
+        if self.inflection:
+            self.argument = inflection.parameterize(
+                self.argument, separator='-').replace('_', '-')
 
     def argparse(self):
         """Generate an argparse argument for a MongoDB collection field
